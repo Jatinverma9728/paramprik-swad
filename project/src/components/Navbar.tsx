@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, ShoppingCart, Heart, User } from "lucide-react";
+import { Menu, ShoppingCart, Heart } from "lucide-react";
 import { useStore } from "../store/useStore";
+import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { cart, wishlist, user } = useStore();
+  const { cart, wishlist } = useStore();
 
   return (
     <nav className="bg-amber-50 fixed w-full z-50 top-0 left-0 border-b border-amber-100">
@@ -66,12 +67,24 @@ export const Navbar = () => {
                 </span>
               )}
             </Link>
-            <Link
-              to={user.isAuthenticated ? "/profile" : "/login"}
-              className="p-2"
-            >
-              <User className="h-6 w-6 text-amber-900" />
-            </Link>
+            <SignedIn>
+              <UserButton 
+                afterSignOutUrl="/"
+                appearance={{
+                  elements: {
+                    userButtonBox: "hover:bg-amber-100"
+                  }
+                }}
+              />
+            </SignedIn>
+            <SignedOut>
+              <Link
+                to="/sign-in"
+                className="bg-amber-500 text-white px-4 py-2 rounded-md hover:bg-amber-600"
+              >
+                Sign In
+              </Link>
+            </SignedOut>
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="md:hidden p-2"
