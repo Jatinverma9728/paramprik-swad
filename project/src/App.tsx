@@ -33,7 +33,28 @@ function App() {
   }
 
   return (
-    <ClerkProvider publishableKey={clerkPubKey!}>
+    <ClerkProvider 
+      publishableKey={clerkPubKey!}
+      appearance={{
+        layout: {
+          socialButtonsVariant: "iconButton",
+          logoImageUrl: "/images/paramprik swad logo.jpg",
+          logoPlacement: "inside",
+          helpPageUrl: "/help",
+        },
+        elements: {
+          card: "shadow-xl mx-auto",
+          rootBox: "flex justify-center py-8 px-4",
+          headerTitle: "text-2xl font-bold text-amber-900",
+          headerSubtitle: "text-amber-700",
+          socialButtonsIconButton: "border-2 border-amber-200 hover:border-amber-300",
+          formButtonPrimary: "bg-amber-500 hover:bg-amber-600",
+          formFieldInput: "border-amber-200 focus:border-amber-500",
+          footerActionLink: "text-amber-600 hover:text-amber-700",
+          main: "max-w-md w-full"
+        }
+      }}
+    >
       <Router>
         <div className="flex flex-col min-h-screen">
           <Navbar />

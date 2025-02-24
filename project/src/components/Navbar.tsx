@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, ShoppingCart, Heart } from "lucide-react";
+import { Menu, ShoppingCart, Heart, User } from "lucide-react";
 import { useStore } from "../store/useStore";
 import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
 
@@ -80,9 +80,9 @@ export const Navbar = () => {
             <SignedOut>
               <Link
                 to="/sign-in"
-                className="bg-amber-500 text-white px-4 py-2 rounded-md hover:bg-amber-600"
+                className="p-2 hover:bg-amber-100 rounded-full transition-colors"
               >
-                Sign In
+                <User className="h-6 w-6 text-amber-900" />
               </Link>
             </SignedOut>
             <button
