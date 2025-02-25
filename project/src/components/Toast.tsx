@@ -1,39 +1,46 @@
-import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Check, X, ShoppingCart } from 'lucide-react';
+import React, { useEffect } from 'react';
+import { X } from 'lucide-react';
 
 interface ToastProps {
   message: string;
   isVisible: boolean;
-  type: 'success' | 'error';
+  type?: 'success' | 'error';
+  onClose: () => void;
 }
 
-export const Toast = ({ message, isVisible, type }: ToastProps) => {
-  const isCartAction = message.toLowerCase().includes('cart');
-  const bgColor = type === 'success' 
-    ? isCartAction ? 'bg-amber-500' : 'bg-green-500'
-    : 'bg-red-500';
-  
-  const Icon = isCartAction 
-    ? ShoppingCart 
-    : type === 'success' 
-      ? Check 
-      : X;
+export const Toast: React.FC<ToastProps> = ({ 
+  message, 
+  isVisible, 
+  type = 'success',
+  onClose 
+}) => {
+  useEffect(() => {
+    if (isVisible) {
+      const timer = setTimeout(() => {
+        onClose();
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [isVisible, onClose]);
+
+  if (!isVisible) return null;
 
   return (
-    <AnimatePresence>
-      {isVisible && (
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 50 }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
-          className={`fixed bottom-24 left-1/2 transform -translate-x-1/2 ${bgColor} text-white px-6 py-3 rounded-full shadow-lg z-[9999] flex items-center gap-2`}
+    <div className="fixed bottom-4 right-4 z-50">
+      <div className={`
+        rounded-lg shadow-lg p-4 min-w-[200px] 
+        flex items-center justify-between gap-2
+        ${type === 'success' ? 'bg-green-500' : 'bg-red-500'} 
+        text-white
+      `}>
+        <span>{message}</span>
+        <button 
+          onClick={onClose}
+          className="p-1 hover:bg-white/20 rounded-full"
         >
-          <Icon className="h-5 w-5" />
-          <span className="font-medium">{message}</span>
-        </motion.div>
-      )}
-    </AnimatePresence>
+          <X size={16} />
+        </button>
+      </div>
+    </div>
   );
 };
