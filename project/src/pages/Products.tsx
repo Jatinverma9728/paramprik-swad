@@ -3,6 +3,8 @@ import { useStore } from "../store/useStore";
 import { Heart, ShoppingCart, ChevronDown } from "lucide-react";
 import { Product, ProductSize } from "../types";
 import { useSearchParams } from "react-router-dom";
+import { ScrollToTopButton } from "../components/ScrollToTopButton";
+import { Toast } from "../components/Toast";
 
 const PRODUCTS: Product[] = [
   {
@@ -710,7 +712,7 @@ export const Products = () => {
     categoryFromUrl || "All"
   );
   const [searchQuery, setSearchQuery] = useState("");
-  const { addToCart, toggleWishlist, wishlist } = useStore();
+  const { addToCart, toggleWishlist, wishlist, toast } = useStore();
   const [selectedSizes, setSelectedSizes] = useState<
     Record<string, ProductSize>
   >(Object.fromEntries(PRODUCTS.map((p) => [p.id, p.sizes[0]])));
@@ -753,117 +755,121 @@ export const Products = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Filters and Search */}
-      <div className="mb-8 space-y-4">
-        <input
-          type="text"
-          placeholder="Search products..."
-          className="w-full md:w-96 px-4 py-2 border border-amber-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        <div className="flex flex-wrap gap-2">
-          {CATEGORIES.map((category) => (
-            <button
-              key={category}
-              className={`px-4 py-2 rounded-full ${
-                selectedCategory === category
-                  ? "bg-amber-500 text-white"
-                  : "bg-amber-100 text-amber-800 hover:bg-amber-200"
-              }`}
-              onClick={() => setSelectedCategory(category)}
-            >
-              {category}
-            </button>
-          ))}
+    <div className="relative">
+      <Toast {...toast} />
+      <div className="container mx-auto px-4 py-8">
+        {/* Filters and Search */}
+        <div className="mb-8 space-y-4">
+          <input
+            type="text"
+            placeholder="Search products..."
+            className="w-full md:w-96 px-4 py-2 border border-amber-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <div className="flex flex-wrap gap-2">
+            {CATEGORIES.map((category) => (
+              <button
+                key={category}
+                className={`px-4 py-2 rounded-full ${
+                  selectedCategory === category
+                    ? "bg-amber-500 text-white"
+                    : "bg-amber-100 text-amber-800 hover:bg-amber-200"
+                }`}
+                onClick={() => setSelectedCategory(category)}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Products Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filteredProducts.map((product) => (
-          <div
-            key={product.id}
-            className="bg-white rounded-lg shadow-md overflow-hidden"
-          >
-            <div className="relative">
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-full h-48 object-cover"
-              />
-              <div className="absolute top-2 right-2 flex space-x-2">
-                <button
-                  onClick={() =>
-                    toggleWishlist({
-                      ...product,
-                      selectedSize: selectedSizes[product.id],
-                    })
-                  }
-                  className={`p-2 rounded-full ${
-                    isInWishlist(product.id)
-                      ? "bg-red-50 text-red-500"
-                      : "bg-white/90 text-amber-500 hover:bg-white"
-                  } transition-colors`}
-                >
-                  <Heart className="h-5 w-5" />
-                </button>
-              </div>
-            </div>
-            <div className="p-4">
-              <div className="mb-2">
-                <span className="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-1 rounded-full">
-                  {product.category}
-                </span>
-              </div>
-              <h3 className="text-lg font-semibold text-amber-900 mb-1">
-                {product.name}
-              </h3>
-              <div className="relative mb-4">
-                <select
-                  value={selectedSizes[product.id].size}
-                  onChange={(e) => {
-                    const size = product.sizes.find(
-                      (s) => s.size === e.target.value
-                    );
-                    if (size) handleSizeChange(product.id, size);
-                  }}
-                  className="w-full appearance-none bg-amber-50 border border-amber-200 text-amber-900 py-2 px-3 pr-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
-                >
-                  {product.sizes.map((size) => (
-                    <option key={size.size} value={size.size}>
-                      {size.size}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 h-5 w-5 text-amber-700 pointer-events-none" />
-              </div>
-              <p className="text-gray-600 text-sm mb-4">
-                {product.description}
-              </p>
-              <div className="flex justify-between items-center">
-                <span className="text-lg font-bold text-amber-900">
-                  ₹{selectedSizes[product.id].price}
-                </span>
-                <div className="flex space-x-2">
+        {/* Products Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {filteredProducts.map((product) => (
+            <div
+              key={product.id}
+              className="bg-white rounded-lg shadow-md overflow-hidden"
+            >
+              <div className="relative">
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="w-full h-48 object-cover"
+                />
+                <div className="absolute top-2 right-2 flex space-x-2">
                   <button
                     onClick={() =>
-                      addToCart({
+                      toggleWishlist({
                         ...product,
                         selectedSize: selectedSizes[product.id],
                       })
                     }
-                    className="bg-amber-500 text-white p-2 rounded-full hover:bg-amber-600"
+                    className={`p-2 rounded-full ${
+                      isInWishlist(product.id)
+                        ? "bg-red-50 text-red-500"
+                        : "bg-white/90 text-amber-500 hover:bg-white"
+                    } transition-colors`}
                   >
-                    <ShoppingCart className="h-5 w-5" />
+                    <Heart className="h-5 w-5" />
                   </button>
                 </div>
               </div>
+              <div className="p-4">
+                <div className="mb-2">
+                  <span className="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-1 rounded-full">
+                    {product.category}
+                  </span>
+                </div>
+                <h3 className="text-lg font-semibold text-amber-900 mb-1">
+                  {product.name}
+                </h3>
+                <div className="relative mb-4">
+                  <select
+                    value={selectedSizes[product.id].size}
+                    onChange={(e) => {
+                      const size = product.sizes.find(
+                        (s) => s.size === e.target.value
+                      );
+                      if (size) handleSizeChange(product.id, size);
+                    }}
+                    className="w-full appearance-none bg-amber-50 border border-amber-200 text-amber-900 py-2 px-3 pr-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  >
+                    {product.sizes.map((size) => (
+                      <option key={size.size} value={size.size}>
+                        {size.size}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 h-5 w-5 text-amber-700 pointer-events-none" />
+                </div>
+                <p className="text-gray-600 text-sm mb-4">
+                  {product.description}
+                </p>
+                <div className="flex justify-between items-center">
+                  <span className="text-lg font-bold text-amber-900">
+                    ₹{selectedSizes[product.id].price}
+                  </span>
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() =>
+                        addToCart({
+                          ...product,
+                          selectedSize: selectedSizes[product.id],
+                        })
+                      }
+                      className="bg-amber-500 text-white p-2 rounded-full hover:bg-amber-600"
+                    >
+                      <ShoppingCart className="h-5 w-5" />
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
+      <ScrollToTopButton />
     </div>
   );
 };

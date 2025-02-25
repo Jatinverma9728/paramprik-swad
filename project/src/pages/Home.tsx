@@ -1,8 +1,15 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ShoppingCart, Heart, ChevronDown } from "lucide-react";
+import { ShoppingCart, Heart, ChevronDown, ChevronUp } from "lucide-react";
 import { useStore } from "../store/useStore";
 import { Product, ProductSize } from "../types";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { animateCategories, animateProducts, cleanupScrollTriggers } from "../animations/scrollAnimations";
+import { ScrollToTopButton } from "../components/ScrollToTopButton";
+import { Toast } from "../components/Toast";
+
+gsap.registerPlugin(ScrollTrigger);
 
 // Featured products data
 const FEATURED_PRODUCTS = [
@@ -135,7 +142,9 @@ const FEATURED_PRODUCTS = [
 
 export const Home = () => {
   const parallaxRef = useRef<HTMLDivElement>(null);
-  const { addToCart, toggleWishlist, wishlist } = useStore();
+  const categoriesRef = useRef<HTMLDivElement>(null);
+  const productsRef = useRef<HTMLDivElement>(null);
+  const { addToCart, toggleWishlist, wishlist, toast } = useStore();
   const [selectedSizes, setSelectedSizes] = useState<
     Record<string, ProductSize>
   >(Object.fromEntries(FEATURED_PRODUCTS.map((p) => [p.id, p.sizes[0]])));
@@ -149,8 +158,22 @@ export const Home = () => {
     }));
   };
 
+  useEffect(() => {
+    // Small delay to ensure DOM is ready
+    const timer = setTimeout(() => {
+      animateCategories(categoriesRef);
+      animateProducts(productsRef);
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+      cleanupScrollTriggers();
+    };
+  }, []);
+
   return (
     <div className="relative">
+      <Toast {...toast} />
       {/* Hero Section */}
       <div className="relative h-screen">
         <div className="absolute inset-0">
@@ -188,7 +211,7 @@ export const Home = () => {
           <h2 className="text-3xl font-bold text-amber-900 text-center mb-12">
             Our Categories
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div ref={categoriesRef} className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
                 title: "Spices",
@@ -249,7 +272,7 @@ export const Home = () => {
             carefully curated for authentic taste and quality.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div ref={productsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {FEATURED_PRODUCTS.map((product) => (
               <div
                 key={product.id}
@@ -321,10 +344,9 @@ export const Home = () => {
                           selectedSize: selectedSizes[product.id],
                         })
                       }
-                      className="flex items-center space-x-2 bg-amber-500 text-white px-4 py-2 rounded-lg hover:bg-amber-600 transition-colors"
+                      className="bg-amber-500 text-white p-2 rounded-full hover:bg-amber-600"
                     >
-                      <ShoppingCart className="h-4 w-4" />
-                      <span>Add to Cart</span>
+                      <ShoppingCart className="h-5 w-5" />
                     </button>
                   </div>
                 </div>
@@ -435,6 +457,9 @@ export const Home = () => {
           </div>
         </div>
       </div>
+
+      {/* Scroll to Top Button */}
+      <ScrollToTopButton />
     </div>
   );
 };
