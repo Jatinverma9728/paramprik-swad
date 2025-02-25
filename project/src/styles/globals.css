@@ -1,0 +1,15 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}  animation: slideIn 0.3s ease-out;.animate-slideIn {}  }    opacity: 1;    transform: translateY(0) translateX(-50%);  to {  }    opacity: 0;    transform: translateY(-1rem) translateX(-50%);  from {@keyframes slideIn {

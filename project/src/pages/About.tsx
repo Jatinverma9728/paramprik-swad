@@ -9,7 +9,14 @@ const PRODUCT_IMAGES = [
   "/images/organic aata.jpg",
   "/images/Pink-Salt-powder.jpg",
   "/images/garammassala.jpg",
-  "/images/almond oil.jpg"
+  "/images/almond oil.jpg",
+  "/images/desi khand.webp",
+  "/images/chana.webp",
+  "/images/masoor daal.webp",
+  "/images/multi flora.webp",
+  "/images/moong chilka.webp",
+  "/images/lassi.webp",
+  "/images/butter.jpg",
 ];
 
 export const About = () => {
@@ -18,7 +25,7 @@ export const About = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % PRODUCT_IMAGES.length);
-    }, 8000); // Changed from 3000 to 8000 (8 seconds)
+    }, 4000); //Duration
 
     return () => clearInterval(timer);
   }, []);
