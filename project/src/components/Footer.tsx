@@ -1,25 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Facebook, Instagram, Twitter } from "lucide-react";
 
 export const Footer = () => {
+  const [videoError, setVideoError] = useState(false);
+
   return (
     <footer className="relative bg-black">
-      {/* Background Video */}
+      {/* Background Video with Error Handling */}
       <div className="absolute inset-0">
-        <video
-          className="w-full h-full object-cover"
-          autoPlay
-          muted
-          loop
-          playsInline
-        >
-          <source
-            src="/images/2f74fc9020624fb09059c766e538177a.mp4"
-            type="video/mp4"
-          />
-        </video>
-        <div className="absolute inset-0 bg-black/40"></div>
+        {!videoError && (
+          <video
+            className="w-full h-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+            onError={() => setVideoError(true)}
+          >
+            <source
+              src="/images/2f74fc9020624fb09059c766e538177a.mp4"
+              type="video/mp4"
+            />
+          </video>
+        )}
+        <div className="absolute inset-0 bg-black/60"></div>
       </div>
 
       {/* Content Container */}
