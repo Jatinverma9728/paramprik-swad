@@ -6,7 +6,10 @@ export default defineConfig({
   plugins: [react()],
   build: {
     outDir: 'dist',
-    sourcemap: true
+    sourcemap: true,
+    commonjsOptions: {
+      transformMixedEsModules: true
+    }
   },
   server: {
     port: 3000
