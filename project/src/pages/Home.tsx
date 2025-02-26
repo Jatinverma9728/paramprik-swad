@@ -484,7 +484,7 @@ export const Home = () => {
                     Portfolio
                   </a>
                   <a
-                    href="www.linkedin.com/in/jatinverma9728"
+                    href="https://www.linkedin.com/in/jatinverma9728/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-amber-700 hover:text-amber-600"
