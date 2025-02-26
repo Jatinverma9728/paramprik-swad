@@ -5,6 +5,7 @@ import { Product, ProductSize } from "../types";
 import { useSearchParams } from "react-router-dom";
 import { ScrollToTopButton } from "../components/ScrollToTopButton";
 import { Toast } from "../components/Toast";
+import { AnimatedHeart } from "../components/AnimatedHeart";
 
 const PRODUCTS: Product[] = [
   {
@@ -12,8 +13,10 @@ const PRODUCTS: Product[] = [
     name: "Organic Turmeric Powder",
     description:
       "Premium quality organic turmeric powder with high curcumin content.",
+    hoverDescription: "Rich in antioxidants and anti-inflammatory properties.",
     category: "Spices",
     image: "/images/turmric.jpg",
+    hoverImage: "/images/turmeric-benefits.jpg",
     type: "solid",
     sizes: [
       { size: "100g", price: 50 },
@@ -27,6 +30,8 @@ const PRODUCTS: Product[] = [
     description: "Traditional clarified butter made from pure cow milk.",
     category: "Dairy",
     image: "/images/ghee.jpg",
+    hoverImage: "/images/ghee-benefits.jpg",
+    hoverDescription: "Rich in vitamins A, D, E, and K. Perfect for cooking",
     type: "liquid",
     sizes: [
       { size: "200ml", price: 300 },
@@ -41,6 +46,8 @@ const PRODUCTS: Product[] = [
     description: "Premium quality organic red chili Powder.",
     category: "Spices",
     image: "/images/red-chilli.webp",
+    hoverImage: "/images/red-chilli-benefits.jpg",
+    hoverDescription: "Adds perfect heat and color to your dishes",
     type: "solid",
     sizes: [
       { size: "100g", price: 50 },
@@ -690,6 +697,38 @@ const PRODUCTS: Product[] = [
   },
 ];
 
+// Add hover properties to all products
+const updatedProducts = PRODUCTS.map(product => {
+  const imagePath = product.image;
+  const imageExtension = imagePath.split('.').pop(); // get file extension
+  const imageBasePath = imagePath.substring(0, imagePath.lastIndexOf('.'));
+  
+  return {
+    ...product,
+    // Create hover image path by adding -benefits before the extension
+    hoverImage: `${imageBasePath}-benefits.${imageExtension}`,
+    // Add descriptive hover text based on category
+    hoverDescription: getHoverDescription(product.category, product.name)
+  };
+});
+
+// Helper function to generate meaningful hover descriptions
+function getHoverDescription(category: string, name: string) {
+  const descriptions: Record<string, string> = {
+    'Spices': 'Rich in antioxidants and natural flavors. Perfect for authentic Indian cooking.',
+    'Dairy': 'Fresh and pure dairy products rich in nutrients and healthy fats.',
+    'Pulses': 'High in protein and fiber. Essential for a balanced diet.',
+    'Oils': 'Cold-pressed and natural oils for healthy cooking.',
+    'Salts': 'Natural minerals and pure taste enhancers.',
+    'Natural Sweetness': 'Healthy alternatives to refined sugar.',
+    'Honey': 'Pure and natural honey with medicinal properties.',
+    'Rice': 'Premium quality grains for perfect cooking.',
+    'Flours': 'Fresh-ground and nutrient-rich flour varieties.'
+  };
+
+  return descriptions[category] || `Learn more about ${name}`;
+}
+
 const CATEGORIES = [
   "All",
   "Spices",
@@ -715,7 +754,8 @@ export const Products = () => {
   const { addToCart, toggleWishlist, wishlist, toast } = useStore();
   const [selectedSizes, setSelectedSizes] = useState<
     Record<string, ProductSize>
-  >(Object.fromEntries(PRODUCTS.map((p) => [p.id, p.sizes[0]])));
+  >(Object.fromEntries(updatedProducts.map((p) => [p.id, p.sizes[0]])));
+  const [hoveredProduct, setHoveredProduct] = useState<string | null>(null);
 
   // Update URL when category changes
   useEffect(() => {
@@ -734,7 +774,7 @@ export const Products = () => {
     }
   }, [categoryFromUrl]);
 
-  const filteredProducts = PRODUCTS.filter((product) => {
+  const filteredProducts = updatedProducts.filter((product) => {
     const matchesCategory =
       selectedCategory === "All" || product.category === selectedCategory;
     const matchesSearch =
@@ -791,28 +831,44 @@ export const Products = () => {
               key={product.id}
               className="bg-white rounded-lg shadow-md overflow-hidden"
             >
-              <div className="relative">
+              <div 
+                className="relative h-48 group cursor-pointer overflow-hidden"
+                onMouseEnter={() => setHoveredProduct(product.id)}
+                onMouseLeave={() => setHoveredProduct(null)}
+              >
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="w-full h-48 object-cover"
+                  className={`w-full h-full object-cover absolute top-0 left-0 transition-opacity duration-300 ease-in-out ${
+                    hoveredProduct === product.id ? 'opacity-0' : 'opacity-100'
+                  }`}
                 />
+                <img
+                  src={product.hoverImage || product.image}
+                  alt={`${product.name} detail`}
+                  className={`w-full h-full object-cover absolute top-0 left-0 transition-opacity duration-300 ease-in-out ${
+                    hoveredProduct === product.id ? 'opacity-100' : 'opacity-0'
+                  }`}
+                />
+                <div 
+                  className={`absolute inset-0 flex items-center justify-center p-4 bg-gradient-to-t from-amber-50/90 to-transparent transition-opacity duration-300 ease-in-out ${
+                    hoveredProduct === product.id ? 'opacity-100' : 'opacity-0'
+                  }`}
+                >
+                  <p className="text-amber-900 text-sm text-center font-medium">
+                    {product.hoverDescription || product.description}
+                  </p>
+                </div>
                 <div className="absolute top-2 right-2 flex space-x-2">
-                  <button
-                    onClick={() =>
-                      toggleWishlist({
+                  <div className="bg-white rounded-full p-1">
+                    <AnimatedHeart 
+                      isChecked={isInWishlist(product.id)}
+                      onChange={() => toggleWishlist({
                         ...product,
                         selectedSize: selectedSizes[product.id],
-                      })
-                    }
-                    className={`p-2 rounded-full ${
-                      isInWishlist(product.id)
-                        ? "bg-red-50 text-red-500"
-                        : "bg-white/90 text-amber-500 hover:bg-white"
-                    } transition-colors`}
-                  >
-                    <Heart className="h-5 w-5" />
-                  </button>
+                      })}
+                    />
+                  </div>
                 </div>
               </div>
               <div className="p-4">

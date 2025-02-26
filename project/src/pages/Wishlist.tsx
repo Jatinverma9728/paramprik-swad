@@ -3,6 +3,7 @@ import { useStore } from "../store/useStore";
 import { ShoppingCart, Trash2, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ProductSize } from "../types";
+import { AnimatedHeart } from "../components/AnimatedHeart";
 
 export const Wishlist = () => {
   const { wishlist, toggleWishlist, addToCart } = useStore();
@@ -49,11 +50,21 @@ export const Wishlist = () => {
             key={item.id}
             className="bg-white rounded-lg shadow-md overflow-hidden"
           >
-            <img
-              src={item.image}
-              alt={item.name}
-              className="w-full h-48 object-cover"
-            />
+            <div className="relative">
+              <img
+                src={item.image}
+                alt={item.name}
+                className="w-full h-48 object-cover"
+              />
+              <div className="absolute top-2 right-2 flex space-x-2">
+                <div className="bg-white rounded-full p-1">
+                  <AnimatedHeart 
+                    isChecked={true}
+                    onChange={() => toggleWishlist(item)}
+                  />
+                </div>
+              </div>
+            </div>
             <div className="p-4">
               <h3 className="text-lg font-semibold text-amber-900 mb-2">
                 {item.name}

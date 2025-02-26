@@ -8,6 +8,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { animateCategories, animateProducts, cleanupScrollTriggers } from "../animations/scrollAnimations";
 import { ScrollToTopButton } from "../components/ScrollToTopButton";
 import { Toast } from "../components/Toast";
+import { AnimatedHeart } from "../components/AnimatedHeart"; // Add this import
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -18,9 +19,11 @@ const FEATURED_PRODUCTS = [
     name: "Organic Turmeric Powder",
     description:
       "Premium quality organic turmeric powder with high curcumin content.",
+    hoverDescription: "Rich in antioxidants and anti-inflammatory properties. Perfect for cooking and medicinal uses.",
     price: 50,
     category: "Spices",
     image: "/images/turmric.jpg",
+    hoverImage: "/images/ghee.jpg",
     type: "solid",
     sizes: [
       { size: "100g", price: 50 },
@@ -32,9 +35,11 @@ const FEATURED_PRODUCTS = [
     id: "2",
     name: "Pure Desi Ghee",
     description: "Traditional clarified butter made from pure cow milk.",
+    hoverDescription: "Rich in flavor and nutrients. Ideal for cooking and baking.",
     price: 650,
     category: "Dairy",
     image: "/images/ghee.jpg",
+    hoverImage: "/images/ghee-hover.jpg",
     sizes: [
       { size: "200ml", price: 300 },
       { size: "500ml", price: 600 },
@@ -46,9 +51,11 @@ const FEATURED_PRODUCTS = [
     id: "4",
     name: "Premium Basmati Rice",
     description: "Aged premium basmati rice with long grains.",
+    hoverDescription: "Perfect for biryanis and pilafs. Aromatic and flavorful.",
     category: "Rice",
     price: 230,
     image: "/images/rice-3506194_1920.jpg",
+    hoverImage: "/images/rice-hover.jpg",
     type: "solid",
     sizes: [
       { size: "500g", price: 115 },
@@ -60,8 +67,10 @@ const FEATURED_PRODUCTS = [
     id: "13",
     name: "Organic Pink salt/Sindha Salt",
     description: " Organic Pure & natural Pink salt/Sindha Salt Powder",
+    hoverDescription: "Natural and unrefined. Enhances the flavor of your dishes.",
     category: "Salts",
     image: "/images/Pink-Salt-powder.jpg",
+    hoverImage: "/images/pink-salt-hover.jpg",
     type: "solid",
     sizes: [
       { size: "100g", price: 40 },
@@ -72,8 +81,10 @@ const FEATURED_PRODUCTS = [
     id: "12",
     name: "Organic Almond Oil",
     description: " Organic Pure & natural cold-pressed Almond Oil",
+    hoverDescription: "Rich in vitamins and nutrients. Great for cooking and skincare.",
     category: "Oils",
     image: "/images/almond oil.jpg",
+    hoverImage: "/images/almond-oil-hover.jpg",
     type: "liquid",
     sizes: [
       { size: "100ml", price: 250 },
@@ -87,8 +98,10 @@ const FEATURED_PRODUCTS = [
     id: "35",
     name: "Organic Bansi Gold Wheat Flour",
     description: "Organic MP 306 Natural Wheat flour",
+    hoverDescription: "Stone-ground and unbleached. Ideal for baking and cooking.",
     category: "Flours",
     image: "/images/organic aata.jpg",
+    hoverImage: "/images/wheat-flour-hover.jpg",
     type: "solid",
     sizes: [
       { size: "200g", price: 40 },
@@ -102,8 +115,10 @@ const FEATURED_PRODUCTS = [
     id: "20",
     name: "Organic Jaggery Powder (Sakar)",
     description: "Organic, Pure & natural Jaggery powder (sakar)",
+    hoverDescription: "Natural sweetener. Perfect for desserts and beverages.",
     category: "Natural Sweetness",
     image: "/images/sakar.jpg",
+    hoverImage: "/images/jaggery-hover.jpg",
     type: "solid",
     sizes: [
       { size: "200g", price: 40 },
@@ -115,8 +130,10 @@ const FEATURED_PRODUCTS = [
     id: "22",
     name: "Mustard Honey",
     description: "Pure & natural Mustard Honey",
+    hoverDescription: "Rich in flavor and nutrients. Perfect for sweetening and cooking.",
     category: "Honey",
     image: "/images/mustard honey.webp",
+    hoverImage: "/images/mustard-honey-hover.jpg",
     type: "liquid",
     sizes: [
       { size: "100ml", price: 80 },
@@ -129,8 +146,10 @@ const FEATURED_PRODUCTS = [
     id: "27",
     name: "Moong Whole",
     description: "Pure & natural Moong Whole",
+    hoverDescription: "Rich in protein and fiber. Ideal for soups and salads.",
     category: "Pulses",
     image: "/images/green moong daal.webp",
+    hoverImage: "/images/moong-whole-hover.jpg",
     type: "solid",
     sizes: [
       { size: "200g", price: 40 },
@@ -148,6 +167,7 @@ export const Home = () => {
   const [selectedSizes, setSelectedSizes] = useState<
     Record<string, ProductSize>
   >(Object.fromEntries(FEATURED_PRODUCTS.map((p) => [p.id, p.sizes[0]])));
+  const [hoveredProduct, setHoveredProduct] = useState<string | null>(null);
   const isInWishlist = (productId: string) => {
     return wishlist.some((item) => item.id === productId);
   };
@@ -278,28 +298,44 @@ export const Home = () => {
                 key={product.id}
                 className="bg-white rounded-lg shadow-md overflow-hidden border border-amber-100 hover:shadow-lg transition-shadow"
               >
-                <div className="relative">
+                <div 
+                  className="relative h-48 group cursor-pointer overflow-hidden"
+                  onMouseEnter={() => setHoveredProduct(product.id)}
+                  onMouseLeave={() => setHoveredProduct(null)}
+                >
                   <img
                     src={product.image}
                     alt={product.name}
-                    className="w-full h-48 object-cover"
+                    className={`w-full h-full object-cover absolute top-0 left-0 transition-opacity duration-300 ease-in-out ${
+                      hoveredProduct === product.id ? 'opacity-0' : 'opacity-100'
+                    }`}
                   />
-                  <div className="absolute top-2 right-2 flex space-x-2">
-                    <button
-                      onClick={() =>
-                        toggleWishlist({
+                  <img
+                    src={product.hoverImage || product.image}
+                    alt={`${product.name} detail`}
+                    className={`w-full h-full object-cover absolute top-0 left-0 transition-opacity duration-300 ease-in-out ${
+                      hoveredProduct === product.id ? 'opacity-100' : 'opacity-0'
+                    }`}
+                  />
+                  <div 
+                    className={`absolute inset-0 flex items-center justify-center p-4 bg-gradient-to-t from-amber-50/90 to-transparent transition-opacity duration-300 ease-in-out ${
+                      hoveredProduct === product.id ? 'opacity-100' : 'opacity-0'
+                    }`}
+                  >
+                    <p className="text-amber-900 text-sm text-center font-medium">
+                      {product.hoverDescription || product.description}
+                    </p>
+                  </div>
+                  <div className="absolute top-2 right-2 z-10">
+                    <div className="bg-white rounded-full p-1">
+                      <AnimatedHeart 
+                        isChecked={isInWishlist(product.id)}
+                        onChange={() => toggleWishlist({
                           ...product,
                           selectedSize: selectedSizes[product.id],
-                        })
-                      }
-                      className={`p-2 rounded-full ${
-                        isInWishlist(product.id)
-                          ? "bg-red-50 text-red-500"
-                          : "bg-white/90 text-amber-500 hover:bg-white"
-                      } transition-colors`}
-                    >
-                      <Heart className="h-5 w-5" />
-                    </button>
+                        })}
+                      />
+                    </div>
                   </div>
                 </div>
                 <div className="p-4">

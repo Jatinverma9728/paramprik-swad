@@ -19,7 +19,7 @@ export const Footer = () => {
             type="video/mp4"
           />
         </video>
-        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="absolute inset-0 bg-black/20"></div>
       </div>
 
       {/* Content Container */}
@@ -27,7 +27,7 @@ export const Footer = () => {
         <div className="container mx-auto px-4">
           {/* Logo Section */}
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-amber-900 mb-2">Paramprik Swad</h2>
+            <h2 className="text-4xl font-bold text-amber-600 mb-2">Paramprik Swad</h2>
             <p className="text-xl text-white mb-4">Traditional Indian Flavors</p>
           </div>
 
@@ -35,7 +35,7 @@ export const Footer = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 md:gap-16 mb-12">
             {/* About */}
             <div className="text-center md:text-left">
-              <h3 className="text-2xl text-amber-800 mb-4">About</h3>
+              <h3 className="text-2xl text-amber-600 mb-4">About</h3>
               <p className="text-white">
                 Experience authentic Indian spices and groceries delivered to your doorstep.
               </p>
@@ -43,7 +43,7 @@ export const Footer = () => {
 
             {/* Quick Links */}
             <div className="text-center md:text-left">
-              <h3 className="text-2xl text-amber-800 mb-4">Links</h3>
+              <h3 className="text-2xl text-amber-600 mb-4">Links</h3>
               <ul className="space-y-3">
                 <li>
                   <Link to="/products" className="text-white hover:text-amber-400 transition-colors">
@@ -65,7 +65,7 @@ export const Footer = () => {
 
             {/* Contact */}
             <div className="text-center md:text-left">
-              <h3 className="text-2xl text-amber-800 mb-4">Contact</h3>
+              <h3 className="text-2xl text-amber-600 mb-4">Contact</h3>
               <ul className="space-y-3 text-white">
                 <li>swadparamprik@gmail.com</li>
                 <li>(+19) 81990845** , 93069641**</li>
@@ -75,7 +75,7 @@ export const Footer = () => {
 
             {/* Social */}
             <div className="text-center md:text-left">
-              <h3 className="text-2xl text-amber-800 mb-4">Follow Us</h3>
+              <h3 className="text-2xl text-amber-600 mb-4">Follow Us</h3>
               <div className="flex justify-center md:justify-start space-x-6">
                 <a href="#" className="text-white hover:text-amber-400">
                   <Facebook className="h-7 w-7" />
