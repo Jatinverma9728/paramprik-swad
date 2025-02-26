@@ -231,7 +231,10 @@ export const Home = () => {
           <h2 className="text-3xl font-bold text-amber-900 text-center mb-12">
             Our Categories
           </h2>
-          <div ref={categoriesRef} className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div
+            ref={categoriesRef}
+            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          >
             {[
               {
                 title: "Spices",
@@ -292,13 +295,16 @@ export const Home = () => {
             carefully curated for authentic taste and quality.
           </p>
 
-          <div ref={productsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div
+            ref={productsRef}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
             {FEATURED_PRODUCTS.map((product) => (
               <div
                 key={product.id}
                 className="bg-white rounded-lg shadow-md overflow-hidden border border-amber-100 hover:shadow-lg transition-shadow"
               >
-                <div 
+                <div
                   className="relative h-48 group cursor-pointer overflow-hidden"
                   onMouseEnter={() => setHoveredProduct(product.id)}
                   onMouseLeave={() => setHoveredProduct(null)}
@@ -307,19 +313,25 @@ export const Home = () => {
                     src={product.image}
                     alt={product.name}
                     className={`w-full h-full object-cover absolute top-0 left-0 transition-opacity duration-300 ease-in-out ${
-                      hoveredProduct === product.id ? 'opacity-0' : 'opacity-100'
+                      hoveredProduct === product.id
+                        ? "opacity-0"
+                        : "opacity-100"
                     }`}
                   />
                   <img
                     src={product.hoverImage || product.image}
                     alt={`${product.name} detail`}
                     className={`w-full h-full object-cover absolute top-0 left-0 transition-opacity duration-300 ease-in-out ${
-                      hoveredProduct === product.id ? 'opacity-100' : 'opacity-0'
+                      hoveredProduct === product.id
+                        ? "opacity-100"
+                        : "opacity-0"
                     }`}
                   />
-                  <div 
+                  <div
                     className={`absolute inset-0 flex items-center justify-center p-4 bg-gradient-to-t from-amber-50/90 to-transparent transition-opacity duration-300 ease-in-out ${
-                      hoveredProduct === product.id ? 'opacity-100' : 'opacity-0'
+                      hoveredProduct === product.id
+                        ? "opacity-100"
+                        : "opacity-0"
                     }`}
                   >
                     <p className="text-amber-900 text-sm text-center font-medium">
@@ -328,12 +340,14 @@ export const Home = () => {
                   </div>
                   <div className="absolute top-2 right-2 z-10">
                     <div className="bg-white rounded-full p-1">
-                      <AnimatedHeart 
+                      <AnimatedHeart
                         isChecked={isInWishlist(product.id)}
-                        onChange={() => toggleWishlist({
-                          ...product,
-                          selectedSize: selectedSizes[product.id],
-                        })}
+                        onChange={() =>
+                          toggleWishlist({
+                            ...product,
+                            selectedSize: selectedSizes[product.id],
+                          })
+                        }
                       />
                     </div>
                   </div>
@@ -462,7 +476,7 @@ export const Home = () => {
                 </p>
                 <div className="flex justify-center space-x-4">
                   <a
-                    href="https://jatinverma9728.github.io/portfolio/"
+                    href="https://vrma-portfolio.vercel.app/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-amber-700 hover:text-amber-600"
