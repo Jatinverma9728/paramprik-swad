@@ -7,7 +7,8 @@ import { ScrollToTopButton } from "../components/ScrollToTopButton";
 import { Toast } from "../components/Toast";
 import { AnimatedHeart } from "../components/AnimatedHeart";
 
-const PRODUCTS: Product[] = [
+// Make sure PRODUCTS array is exported
+export const PRODUCTS: Product[] = [
   {
     id: "1",
     name: "Organic Turmeric Powder",
@@ -742,6 +743,9 @@ const CATEGORIES = [
   "Flours",
 ];
 
+export const FEATURED_PRODUCTS = [
+  // Your existing products array
+];
 
 export const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();

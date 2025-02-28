@@ -159,98 +159,6 @@ const FEATURED_PRODUCTS = [
   },
 ];
 
-const SPECIAL_OFFERS = [
-  {
-    id: 'offer1',
-    title: 'Festival Pack',
-    description: 'Complete festival cooking essentials',
-    image: '/images/festival-combo.jpg', // Add this image
-    thumbnail: '/images/festival-thumb.jpg', // Add this image
-    products: [
-      {
-        id: '2', // Match with FEATURED_PRODUCTS id
-        name: 'Pure Desi Ghee',
-        size: '1L',
-        originalPrice: 1100,
-        offerPrice: 950,
-        image: '/images/ghee.jpg',
-      },
-      {
-        id: '1', // Match with FEATURED_PRODUCTS id
-        name: 'Organic Turmeric Powder',
-        size: '200g',
-        originalPrice: 100,
-        offerPrice: 80,
-        image: '/images/turmric.jpg',
-      },
-      {
-        id: '4', // Match with FEATURED_PRODUCTS id
-        name: 'Premium Basmati Rice',
-        size: '1kg',
-        originalPrice: 230,
-        offerPrice: 199,
-        image: '/images/rice-3506194_1920.jpg',
-      }
-    ],
-    discount: 25,
-    validUntil: '2024-03-31',
-  },
-  {
-    id: 'offer2',
-    title: 'Health Bundle',
-    description: 'Essential organic products for healthy living',
-    image: '/images/health-combo.jpg', // Add this image
-    thumbnail: '/images/health-thumb.jpg', // Add this image
-    products: [
-      {
-        id: '12', // Match with FEATURED_PRODUCTS id
-        name: 'Organic Almond Oil',
-        size: '500ml',
-        originalPrice: 750,
-        offerPrice: 650,
-        image: '/images/almond oil.jpg',
-      },
-      {
-        id: '13', // Match with FEATURED_PRODUCTS id
-        name: 'Organic Pink Salt',
-        size: '200g',
-        originalPrice: 80,
-        offerPrice: 65,
-        image: '/images/Pink-Salt-powder.jpg',
-      }
-    ],
-    discount: 20,
-    validUntil: '2024-03-31',
-  },
-  {
-    id: 'offer3',
-    title: 'Spice Combo',
-    description: 'Premium spices collection',
-    image: '/images/spice-combo.jpg', // Add this image
-    thumbnail: '/images/spice-thumb.jpg', // Add this image
-    products: [
-      {
-        id: '1', // Match with FEATURED_PRODUCTS id
-        name: 'Organic Turmeric',
-        size: '100g',
-        originalPrice: 50,
-        offerPrice: 40,
-        image: '/images/turmric.jpg',
-      },
-      {
-        id: '14', // Add this id to FEATURED_PRODUCTS
-        name: 'Black Pepper',
-        size: '100g',
-        originalPrice: 80,
-        offerPrice: 65,
-        image: '/images/black-pepper.jpg',
-      }
-    ],
-    discount: 15,
-    validUntil: '2024-03-31',
-  }
-];
-
 export const Home = () => {
   const parallaxRef = useRef<HTMLDivElement>(null);
   const categoriesRef = useRef<HTMLDivElement>(null);
@@ -260,7 +168,6 @@ export const Home = () => {
     Record<string, ProductSize>
   >(Object.fromEntries(FEATURED_PRODUCTS.map((p) => [p.id, p.sizes[0]])));
   const [hoveredProduct, setHoveredProduct] = useState<string | null>(null);
-  const [selectedOffer, setSelectedOffer] = useState<string>('offer1');
   const isInWishlist = (productId: string) => {
     return wishlist.some((item) => item.id === productId);
   };
@@ -269,26 +176,6 @@ export const Home = () => {
       ...prev,
       [productId]: size,
     }));
-  };
-
-  const handleAddOfferToCart = (offer: typeof SPECIAL_OFFERS[0]) => {
-    offer.products.forEach(product => {
-      const featuredProduct = FEATURED_PRODUCTS.find(fp => fp.id === product.id);
-      if (featuredProduct) {
-        const size = featuredProduct.sizes.find(s => s.size === product.size);
-        if (size) {
-          const discountedProduct = {
-            ...featuredProduct,
-            selectedSize: {
-              ...size,
-              price: product.offerPrice // Use the offer price instead of original price
-            },
-            price: product.offerPrice // Update the base price too
-          };
-          addToCart(discountedProduct);
-        }
-      }
-    });
   };
 
   useEffect(() => {
@@ -393,107 +280,6 @@ export const Home = () => {
                     Explore →
                   </Link>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Enhanced Special Offers Banner */}
-      <div className="relative py-12 bg-gradient-to-br from-amber-50 to-amber-100">
-        <div className="absolute inset-0 opacity-5 pattern-spices"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <span className="inline-block px-4 py-1 bg-amber-600 text-white rounded-full text-sm font-medium mb-3">
-              Limited Time
-            </span>
-            <h2 className="text-3xl font-bold text-amber-900 mb-3">Special Festival Offers</h2>
-            <div className="w-24 h-1 bg-amber-500 mx-auto"></div>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {SPECIAL_OFFERS.map((offer) => (
-              <div
-                key={offer.id}
-                className={`bg-white rounded-xl overflow-hidden shadow-lg transform transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl cursor-pointer ${
-                  selectedOffer === offer.id ? 'ring-2 ring-amber-500' : ''
-                }`}
-                onClick={() => setSelectedOffer(offer.id)}
-              >
-                <div className="relative group">
-                  <img 
-                    src={offer.image} 
-                    alt={offer.title} 
-                    className="w-full h-40 object-cover"
-                  />
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <div className="absolute bottom-0 left-0 right-0 p-4">
-                      <div className="flex gap-2 justify-center">
-                        {offer.products.map((product, idx) => (
-                          <img
-                            key={idx}
-                            src={product.image}
-                            alt={product.name}
-                            className="w-12 h-12 rounded-md object-cover border-2 border-white"
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="absolute top-4 right-4 bg-amber-500 text-white px-3 py-1 rounded-full">
-                    {offer.discount}% OFF
-                  </div>
-                </div>
-                
-                <div className="p-4"> {/* reduced padding from p-6 to p-4 */}
-                  <h3 className="text-lg font-bold text-amber-900 mb-2">{offer.title}</h3> {/* reduced text size */}
-                  <p className="text-amber-700 mb-3 text-sm">{offer.description}</p> {/* reduced margin and text size */}
-                  
-                  <div className="space-y-2"> {/* reduced spacing from space-y-3 to space-y-2 */}
-                    {offer.products.map((product, idx) => (
-                      <div key={idx} className="flex justify-between items-center">
-                        <span className="text-sm text-gray-600">
-                          {product.name} ({product.size})
-                        </span>
-                        <div className="text-right">
-                          <span className="text-gray-400 line-through text-sm">₹{product.originalPrice}</span>
-                          <span className="text-amber-900 font-bold ml-2">₹{product.offerPrice}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="mt-4 flex items-center justify-between"> {/* reduced margin from mt-6 to mt-4 */}
-                    <div className="flex items-center text-amber-600">
-                      <Timer className="w-4 h-4 mr-1" />
-                      <span className="text-xs">Valid till {new Date(offer.validUntil).toLocaleDateString()}</span> {/* reduced text size */}
-                    </div>
-                    <button 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleAddOfferToCart(offer);
-                      }}
-                      className="bg-amber-500 text-white px-3 py-1.5 rounded-lg hover:bg-amber-600 transition-colors text-sm flex items-center gap-1"
-                    >
-                      <ShoppingCart className="w-4 h-4" />
-                      Add Bundle
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-            {[
-              { icon: Gift, title: 'Free Gifts', text: 'With orders above ₹1000' },
-              { icon: Percent, title: 'Extra 5% Off', text: 'On first purchase' },
-              { icon: Timer, title: 'Limited Time', text: 'Grab before stock ends' },
-            ].map((item, idx) => (
-              <div key={idx} className="p-3 bg-white rounded-lg shadow-sm">
-                <item.icon className="w-6 h-6 mx-auto mb-2 text-amber-600" />
-                <h4 className="font-semibold mb-1 text-sm text-amber-900">{item.title}</h4>
-                <p className="text-amber-700 text-xs">{item.text}</p>
               </div>
             ))}
           </div>
