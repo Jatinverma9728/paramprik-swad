@@ -7,8 +7,10 @@ import { ScrollToTopButton } from "../components/ScrollToTopButton";
 import { Toast } from "../components/Toast";
 import { AnimatedHeart } from "../components/AnimatedHeart";
 
-// Add this new constant
-const BASE_IMAGE_PATH = '/images/products';
+// Update BASE_IMAGE_PATH to use absolute URL in production
+const BASE_IMAGE_PATH = import.meta.env.PROD 
+  ? 'https://paramprikswad.vercel.app/images/products'
+  : '/images/products';
 
 // Update image paths in PRODUCTS array
 export const PRODUCTS: Product[] = [
@@ -768,6 +770,7 @@ export const Products = () => {
   >(Object.fromEntries(updatedProducts.map((p) => [p.id, p.sizes[0]])));
   const [hoveredProduct, setHoveredProduct] = useState<string | null>(null);
   const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
+  const [imagesLoaded, setImagesLoaded] = useState(false);
 
   // Update URL when category changes
   useEffect(() => {
@@ -785,6 +788,31 @@ export const Products = () => {
       setSelectedCategory(categoryFromUrl);
     }
   }, [categoryFromUrl]);
+
+  useEffect(() => {
+    // Preload images
+    Promise.all(
+      PRODUCTS.map(product => {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.src = product.image;
+          img.onload = resolve;
+          img.onerror = resolve; // Continue even if image fails
+        });
+      })
+    ).then(() => {
+      setImagesLoaded(true);
+    });
+  }, []);
+
+  // Add loading state
+  if (!imagesLoaded) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-amber-500"></div>
+      </div>
+    );
+  }
 
   const filteredProducts = updatedProducts.filter((product) => {
     const matchesCategory =
