@@ -65,6 +65,7 @@ export const PRODUCTS: Product[] = [
     type: "solid",
     sizes: [
       { size: "500g", price: 115 },
+      
       { size: "1kg", price: 230 },
     ],
     inStock: true,
