@@ -1,12 +1,17 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, ShoppingCart, Heart, User } from "lucide-react";
+import { Menu, ShoppingCart, Heart, User, ShieldCheck } from "lucide-react";
 import { useStore } from "../store/useStore";
-import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
+import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/clerk-react";
+
+const ADMIN_EMAILS = ["admin@example.com"]; // Add your admin emails here
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { cart, wishlist } = useStore();
+  const { user } = useUser();
+  const isAdmin = user?.emailAddresses[0]?.emailAddress && 
+    ADMIN_EMAILS.includes(user.emailAddresses[0].emailAddress);
 
   return (
     <nav className="bg-amber-50 fixed w-full z-50 top-0 left-0 border-b border-amber-100 h-14">
@@ -44,6 +49,15 @@ export const Navbar = () => {
               >
                 Contact
               </Link>
+              {isAdmin && (
+                <Link
+                  to="/admin"
+                  className="text-amber-600 hover:text-amber-700 px-3 py-2 rounded-md flex items-center gap-2"
+                >
+                  <ShieldCheck className="h-4 w-4" />
+                  Admin Panel
+                </Link>
+              )}
             </div>
           </div>
 
@@ -127,6 +141,16 @@ export const Navbar = () => {
             >
               Contact
             </Link>
+            {isAdmin && (
+              <Link
+                to="/admin"
+                className="text-amber-600 hover:text-amber-700 px-3 py-2 rounded-md flex items-center gap-2"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <ShieldCheck className="h-4 w-4" />
+                Admin Panel
+              </Link>
+            )}
           </div>
         </div>
       </div>

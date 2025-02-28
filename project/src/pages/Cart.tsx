@@ -2,19 +2,36 @@ import React, { useState } from "react";
 import { useStore } from "../store/useStore";
 import { 
   Trash2, Plus, Minus, ArrowLeft, Shield, Truck, Clock, AlertCircle,
-  Package, FileDown, Share2, ChevronRight, Timer, ClipboardCopy, ShoppingCart
+  Package, FileDown, Share2, ChevronRight, Timer, ClipboardCopy, ShoppingCart, CheckCircle
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { validateCoupon } from '../constants/coupons';
 import { EmptyCartAnimation } from '../components/EmptyCartAnimation';
 import { PRODUCTS } from './Products'; // Change this line to import PRODUCTS array
+import { z } from "zod"; // Add this import
 
 // Add this font import at the top
 const FONT = "helvetica";
 
+// Add checkout form schema
+const checkoutSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters")
+    .regex(/^[a-zA-Z\s]*$/, "Name should only contain letters"),
+  email: z.string().email("Invalid email address"),
+  phone: z.string()
+    .regex(/^[0-9]{10}$/, "Phone number must be exactly 10 digits"),
+  address: z.string().min(10, "Address must be at least 10 characters"),
+  city: z.string().min(2, "City is required")
+    .regex(/^[a-zA-Z\s]*$/, "City should only contain letters"),
+  pincode: z.string()
+    .regex(/^[0-9]{6}$/, "Pincode must be exactly 6 digits")
+});
+
+type CheckoutForm = z.infer<typeof checkoutSchema>;
+
 export const Cart = () => {
-  const { cart, removeFromCart, updateQuantity, addToCart } = useStore();
+  const { cart, removeFromCart, updateQuantity, addToCart, clearCart, addOrder, lastOrder } = useStore();
   const [showConfirmDelete, setShowConfirmDelete] = useState<string | null>(null);
   const [couponCode, setCouponCode] = useState("");
   const [couponError, setCouponError] = useState("");
@@ -97,7 +114,7 @@ export const Cart = () => {
         Subtotal: ₹${subtotal.toFixed(2)}
         ${appliedCoupon ? `Discount (${appliedCoupon.code}): -₹${appliedCoupon.discount.toFixed(2)}` : ''}
         Shipping: ${shipping === 0 ? "Free" : `₹${shipping.toFixed(2)}`}
-        Total: ₹${(subtotal + shipping - (appliedCoupon?.discount || 0)).toFixed(2)}
+        Total: ₹{(subtotal + shipping - (appliedCoupon?.discount || 0)).toFixed(2)}
         
         Thank you for shopping with Paramparik Swad!
       `.trim();
@@ -162,6 +179,244 @@ export const Cart = () => {
       {text}
     </button>
   );
+
+  // Add new state for checkout
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [isProcessingCheckout, setIsProcessingCheckout] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
+  const [formErrors, setFormErrors] = useState<Partial<CheckoutForm>>({});
+  const [checkoutForm, setCheckoutForm] = useState<CheckoutForm>({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    city: "",
+    pincode: ""
+  });
+
+  const [orderPlaced, setOrderPlaced] = useState(false);
+
+  // Update handleCheckout function
+  const handleCheckout = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setCheckoutError(null);
+    setFormErrors({});
+
+    try {
+      // Additional validation
+      if (cart.length === 0) {
+        setCheckoutError("Your cart is empty");
+        return;
+      }
+
+      if (total < 0) {
+        setCheckoutError("Invalid order total");
+        return;
+      }
+
+      // Validate form
+      const validatedData = checkoutSchema.parse(checkoutForm);
+      setIsProcessingCheckout(true);
+
+      // Create order payload
+      const orderPayload = {
+        orderItems: cart,
+        customerInfo: validatedData,
+        orderSummary: {
+          subtotal,
+          shipping,
+          discount: appliedCoupon?.discount || 0,
+          total: total
+        }
+      };
+
+      // Add order to store and clear cart
+      addOrder(orderPayload);
+      setOrderPlaced(true);
+      setIsCheckoutOpen(false);
+
+    } catch (error) {
+      console.error("Checkout error:", error);
+
+      if (error instanceof z.ZodError) {
+        const errors: Partial<CheckoutForm> = {};
+        error.errors.forEach(err => {
+          if (err.path) {
+            errors[err.path[0] as keyof CheckoutForm] = err.message;
+          }
+        });
+        setFormErrors(errors);
+        setCheckoutError("Please fix the highlighted fields");
+      } else {
+        setCheckoutError(error instanceof Error ? error.message : 'Something went wrong. Please try again.');
+      }
+    } finally {
+      setIsProcessingCheckout(false);
+    }
+  };
+
+  // Add order success view
+  const renderOrderSuccess = () => (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="container mx-auto px-4 py-16 text-center space-y-6"
+    >
+      <div className="bg-white p-8 rounded-lg shadow-md max-w-2xl mx-auto">
+        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+          <CheckCircle className="w-8 h-8 text-green-500" />
+        </div>
+        
+        <h2 className="text-2xl font-bold text-amber-900 mb-4">
+          Order Placed Successfully!
+        </h2>
+
+        <div className="text-left space-y-4">
+          <div className="border-b pb-4">
+            <p className="text-amber-600">Order ID: #{lastOrder?.id}</p>
+            <p className="text-amber-600">Expected Delivery: {
+              new Date(new Date().getTime() + 3 * 24 * 60 * 60 * 1000)
+                .toLocaleDateString("en-US", {
+                  weekday: "long",
+                  month: "long",
+                  day: "numeric"
+                })
+            }</p>
+          </div>
+
+          <div className="space-y-2">
+            {lastOrder?.orderItems.map(item => (
+              <div key={item.id} className="flex items-center gap-4">
+                <img 
+                  src={item.image} 
+                  alt={item.name}
+                  className="w-16 h-16 object-cover rounded"
+                />
+                <div>
+                  <h3 className="font-medium text-amber-900">{item.name}</h3>
+                  <p className="text-sm text-amber-600">
+                    Quantity: {item.quantity} × ₹{item.selectedSize?.price || item.sizes[0].price}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="border-t pt-4 mt-4">
+            <div className="flex justify-between text-amber-900">
+              <span>Total</span>
+              <span className="font-bold">₹{lastOrder?.orderSummary.total.toFixed(2)}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-8 flex gap-4 justify-center">
+          <Link
+            to="/products"
+            className="bg-amber-500 text-white px-6 py-2 rounded-lg hover:bg-amber-600 transition-colors"
+          >
+            Continue Shopping
+          </Link>
+          <button
+            onClick={() => window.print()}
+            className="bg-amber-100 text-amber-800 px-6 py-2 rounded-lg hover:bg-amber-200 transition-colors"
+          >
+            Print Receipt
+          </button>
+        </div>
+      </div>
+    </motion.div>
+  );
+
+  // Update the renderCheckoutForm function to add better validation feedback
+  const renderCheckoutForm = () => (
+    <AnimatePresence>
+      {isCheckoutOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+          onClick={() => !isProcessingCheckout && setIsCheckoutOpen(false)}
+        >
+          <motion.div
+            initial={{ scale: 0.9 }}
+            animate={{ scale: 1 }}
+            exit={{ scale: 0.9 }}
+            className="bg-white p-6 rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto"
+            onClick={e => e.stopPropagation()}
+          >
+            <h3 className="text-xl font-semibold text-amber-900 mb-4">Checkout</h3>
+            
+            {checkoutError && (
+              <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-lg flex items-center gap-2">
+                <AlertCircle className="h-5 w-5 flex-shrink-0" />
+                <p>{checkoutError}</p>
+              </div>
+            )}
+
+            <form onSubmit={handleCheckout} className="space-y-4">
+              {Object.entries(checkoutForm).map(([field, value]) => (
+                <div key={field}>
+                  <label className="block text-sm font-medium text-amber-700 mb-1">
+                    {field.charAt(0).toUpperCase() + field.slice(1)}
+                    <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type={field === 'email' ? 'email' : 'text'}
+                    value={value}
+                    onChange={e => {
+                      setCheckoutForm(prev => ({
+                        ...prev,
+                        [field]: e.target.value
+                      }));
+                      // Clear error when user starts typing
+                      if (formErrors[field as keyof CheckoutForm]) {
+                        setFormErrors(prev => ({
+                          ...prev,
+                          [field]: undefined
+                        }));
+                      }
+                    }}
+                    disabled={isProcessingCheckout}
+                    placeholder={`Enter your ${field.toLowerCase()}`}
+                    className={`w-full p-2 border rounded-lg ${
+                      formErrors[field as keyof CheckoutForm]
+                        ? 'border-red-500 bg-red-50'
+                        : 'border-amber-200'
+                    } focus:outline-none focus:ring-2 focus:ring-amber-500`}
+                  />
+                  {formErrors[field as keyof CheckoutForm] && (
+                    <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                      <AlertCircle className="h-4 w-4" />
+                      {formErrors[field as keyof CheckoutForm]}
+                    </p>
+                  )}
+                </div>
+              ))}
+
+              <div className="pt-4 border-t border-amber-100">
+                {isProcessingCheckout ? (
+                  <LoadingButton text="Processing your order..." />
+                ) : (
+                  <button
+                    type="submit"
+                    className="w-full bg-amber-500 text-white py-3 rounded-lg hover:bg-amber-600 transition-colors"
+                  >
+                    Pay ₹{total.toFixed(2)}
+                  </button>
+                )}
+              </div>
+            </form>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+
+  if (orderPlaced && lastOrder) {
+    return renderOrderSuccess();
+  }
 
   if (cart.length === 0) {
     return (
@@ -552,7 +807,10 @@ export const Cart = () => {
               )}
             </form>
 
-            <button className="w-full bg-amber-500 text-white py-3 rounded-lg hover:bg-amber-600 transition-colors mb-4">
+            <button 
+              onClick={() => setIsCheckoutOpen(true)}
+              className="w-full bg-amber-500 text-white py-3 rounded-lg hover:bg-amber-600 transition-colors mb-4"
+            >
               Proceed to Checkout
             </button>
 
@@ -598,6 +856,7 @@ export const Cart = () => {
       </div>
 
       {renderShareModal()}
+      {renderCheckoutForm()}
     </div>
   );
 };

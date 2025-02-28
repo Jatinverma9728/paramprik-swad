@@ -1,6 +1,27 @@
 import { create } from 'zustand';
 import { CartItem, Product, WishlistItem } from '../types';
 
+interface Order {
+  id: string;
+  orderItems: CartItem[];
+  customerInfo: {
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+    city: string;
+    pincode: string;
+  };
+  orderSummary: {
+    subtotal: number;
+    shipping: number;
+    discount: number;
+    total: number;
+  };
+  status: 'pending' | 'processing' | 'completed' | 'cancelled';
+  date: string;
+}
+
 interface Store {
   cart: CartItem[];
   wishlist: WishlistItem[];
@@ -15,6 +36,13 @@ interface Store {
   updateQuantity: (productId: string, quantity: number) => void;
   toggleWishlist: (product: Product) => void;
   setUser: (userData: { name: string; email: string } | null) => void;
+  clearCart: () => void; // Add this line
+  orders: Order[];
+  lastOrder: Order | null;
+  addOrder: (order: Omit<Order, 'id' | 'status' | 'date'>) => void;
+  updateOrderStatus: (orderId: string, status: Order['status']) => void;
+  getOrderById: (orderId: string) => Order | undefined; // Add this line
+  clearOrders: () => void; // Add this line
 }
 
 const getInitialCart = (): CartItem[] => {
@@ -25,6 +53,16 @@ const getInitialCart = (): CartItem[] => {
 const getInitialWishlist = (): WishlistItem[] => {
   const storedWishlist = localStorage.getItem('wishlist');
   return storedWishlist ? JSON.parse(storedWishlist) : [];
+};
+
+const getInitialOrders = (): Order[] => {
+  try {
+    const stored = localStorage.getItem('orders');
+    return stored ? JSON.parse(stored) : [];
+  } catch (error) {
+    console.error('Error loading orders:', error);
+    return [];
+  }
 };
 
 export const useStore = create<Store>((set) => ({
@@ -130,4 +168,57 @@ export const useStore = create<Store>((set) => ({
         data: userData,
       },
     }),
+
+  // Add clearCart function
+  clearCart: () => {
+    set({ cart: [] });
+  },
+
+  orders: getInitialOrders(),
+  lastOrder: null,
+
+  addOrder: (orderData) => set(state => {
+    try {
+      const newOrder: Order = {
+        ...orderData,
+        id: `ORD-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
+        status: 'pending',
+        date: new Date().toISOString()
+      };
+      
+      const updatedOrders = [...state.orders, newOrder];
+      localStorage.setItem('orders', JSON.stringify(updatedOrders));
+      
+      return {
+        orders: updatedOrders,
+        lastOrder: newOrder,
+        cart: [] // Clear cart after successful order
+      };
+    } catch (error) {
+      console.error('Error adding order:', error);
+      return state;
+    }
+  }),
+
+  updateOrderStatus: (orderId, status) => set(state => {
+    try {
+      const updatedOrders = state.orders.map(order => 
+        order.id === orderId ? { ...order, status } : order
+      );
+      localStorage.setItem('orders', JSON.stringify(updatedOrders));
+      return { orders: updatedOrders };
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      return state;
+    }
+  }),
+
+  // Add order utility functions
+  getOrderById: (orderId: string) => {
+    const state = useStore.getState();
+    return state.orders.find(order => order.id === orderId);
+  },
+
+  // Add this to clear orders (for testing)
+  clearOrders: () => set({ orders: [], lastOrder: null })
 }));
