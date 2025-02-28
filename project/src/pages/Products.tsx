@@ -65,7 +65,7 @@ export const PRODUCTS: Product[] = [
     type: "solid",
     sizes: [
       { size: "500g", price: 115 },
-      
+
       { size: "1kg", price: 230 },
     ],
     inStock: true,
@@ -221,17 +221,20 @@ export const PRODUCTS: Product[] = [
     ],
     inStock: true,
   },
-  // {
-  //   id: "16",
-  //   name: "A2 Gir Cow Bilona Ghee",
-  //   description: " Organic, Pure & natural A2 Gir Cow Bilona Ghee",
-  //
-  //   category: "Dairy",
-  //   image: "/images/a2 cow ghee.jpg",
-  //
-  // type: "liquid",
-  // inStock: true,
-  // },
+  {
+    id: "16",
+    name: "Organic Khand",
+    description: " Organic, Pure & natural Khand",
+    category: "Natural Sweetness",
+    image: "/images/khand.jpg",
+    type: "solid",
+    sizes: [
+      { size: "200g", price: 40 },
+      { size: "500g", price: 80 },
+      { size: "1kg", price: 160 },
+    ],
+    inStock: true,
+  },
   {
     id: "17",
     name: "Organic Khand",
