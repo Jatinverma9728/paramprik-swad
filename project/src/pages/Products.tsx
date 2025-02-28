@@ -7,7 +7,10 @@ import { ScrollToTopButton } from "../components/ScrollToTopButton";
 import { Toast } from "../components/Toast";
 import { AnimatedHeart } from "../components/AnimatedHeart";
 
-// Make sure PRODUCTS array is exported
+// Add this new constant
+const BASE_IMAGE_PATH = '/images/products';
+
+// Update image paths in PRODUCTS array
 export const PRODUCTS: Product[] = [
   {
     id: "1",
@@ -16,8 +19,8 @@ export const PRODUCTS: Product[] = [
       "Premium quality organic turmeric powder with high curcumin content.",
     hoverDescription: "Rich in antioxidants and anti-inflammatory properties.",
     category: "Spices",
-    image: "/images/turmric.jpg",
-    hoverImage: "/images/turmeric-benefits.jpg",
+    image: `${BASE_IMAGE_PATH}/turmric.jpg`,
+    hoverImage: `${BASE_IMAGE_PATH}/turmric.jpg`,
     type: "solid",
     sizes: [
       { size: "100g", price: 50 },
@@ -30,8 +33,8 @@ export const PRODUCTS: Product[] = [
     name: "Pure Desi Ghee",
     description: "Traditional clarified butter made from pure cow milk.",
     category: "Dairy",
-    image: "/images/ghee.jpg",
-    hoverImage: "/images/ghee-benefits.jpg",
+    image: `${BASE_IMAGE_PATH}/ghee.jpg`,
+    hoverImage: `${BASE_IMAGE_PATH}/ghee-benefits.jpg`,
     hoverDescription: "Rich in vitamins A, D, E, and K. Perfect for cooking",
     type: "liquid",
     sizes: [
@@ -46,8 +49,8 @@ export const PRODUCTS: Product[] = [
     name: "Organic Red Chilli Powder",
     description: "Premium quality organic red chili Powder.",
     category: "Spices",
-    image: "/images/red-chilli.webp",
-    hoverImage: "/images/red-chilli-benefits.jpg",
+    image: `${BASE_IMAGE_PATH}/red-chilli.webp`,
+    hoverImage: `${BASE_IMAGE_PATH}/red-chilli-benefits.jpg`,
     hoverDescription: "Adds perfect heat and color to your dishes",
     type: "solid",
     sizes: [
@@ -61,7 +64,7 @@ export const PRODUCTS: Product[] = [
     name: "Premium Basmati Rice",
     description: "Aged premium basmati rice with long grains.",
     category: "Rice",
-    image: "/images/rice-3506194_1920.jpg",
+    image: `${BASE_IMAGE_PATH}/rice-3506194_1920.jpg`,
     type: "solid",
     sizes: [
       { size: "500g", price: 115 },
@@ -75,7 +78,7 @@ export const PRODUCTS: Product[] = [
     name: "Garam Masala",
     description: "Authentic blend of ground spices used in Indian cuisine.",
     category: "Spices",
-    image: "/images/garammassala.jpg",
+    image: `${BASE_IMAGE_PATH}/garammassala.jpg`,
     type: "solid",
     sizes: [
       { size: "50g", price: 50 },
@@ -88,7 +91,7 @@ export const PRODUCTS: Product[] = [
     name: "Organic Pressed Coconut Oil",
     description: "Pure, natural & Organic cold-pressed coconut oil.",
     category: "Oils",
-    image: "/images/coconut-oil-6925841_1920.jpg",
+    image: `${BASE_IMAGE_PATH}/coconut-oil-6925841_1920.jpg`,
     type: "liquid",
     sizes: [
       { size: "100ml", price: 100 },
@@ -101,7 +104,7 @@ export const PRODUCTS: Product[] = [
     name: "Organic Black Mustard Oil",
     description: "Organic, Pure & natural cold-pressed Black Mustard Oil",
     category: "Oils",
-    image: "/images/organic-mustard-oil.jpeg",
+    image: `${BASE_IMAGE_PATH}/organic-mustard-oil.jpeg`,
     type: "liquid",
     sizes: [
       { size: "500ml", price: 70 },
@@ -114,7 +117,7 @@ export const PRODUCTS: Product[] = [
     name: "Organic Butter",
     description: "Pure, Organic & natural cold-pressed coconut oil.",
     category: "Dairy",
-    image: "/images/butter.jpg",
+    image: `${BASE_IMAGE_PATH}/butter.jpg`,
     type: "liquid",
     sizes: [
       { size: "100g", price: 100 },
@@ -129,7 +132,7 @@ export const PRODUCTS: Product[] = [
     name: "Organic Lassi(Butter Milk)",
     description: "Pure and natural Lassi made with pure goodness.",
     category: "Dairy",
-    image: "/images/lassi.webp",
+    image: `${BASE_IMAGE_PATH}/lassi.webp`,
     type: "liquid",
     sizes: [
       { size: "500ml", price: 20 },
@@ -142,7 +145,7 @@ export const PRODUCTS: Product[] = [
     name: "Organic Yellow Mustard Oil",
     description: "Organic, Pure & natural cold-pressed Yellow Mustard Oil",
     category: "Oils",
-    image: "/images/yellow-mustard-oil.jpg",
+    image: `${BASE_IMAGE_PATH}/yellow-mustard-oil.jpg`,
     type: "liquid",
     sizes: [
       { size: "500ml", price: 80 },
@@ -155,7 +158,7 @@ export const PRODUCTS: Product[] = [
     name: "Organic Til Oil",
     description: "Organic Pure & natural cold-pressed Til Oil",
     category: "Oils",
-    image: "/images/til oil.jpg",
+    image: `${BASE_IMAGE_PATH}/til oil.jpg`,
     type: "liquid",
     sizes: [
       { size: "100ml", price: 250 },
@@ -170,7 +173,7 @@ export const PRODUCTS: Product[] = [
     name: "Organic Almond Oil",
     description: " Organic Pure & natural cold-pressed Almond Oil",
     category: "Oils",
-    image: "/images/almond oil.jpg",
+    image: `${BASE_IMAGE_PATH}/almond oil.jpg`,
     type: "liquid",
     sizes: [
       { size: "100ml", price: 250 },
@@ -185,7 +188,7 @@ export const PRODUCTS: Product[] = [
     name: "Organic Pink salt/Sindha Salt",
     description: " Organic Pure & natural Pink salt/Sindha Salt Powder",
     category: "Salts",
-    image: "/images/Pink-Salt-powder.jpg",
+    image: `${BASE_IMAGE_PATH}/Pink-Salt-powder.jpg`,
     type: "solid",
     sizes: [
       { size: "100g", price: 40 },
@@ -198,7 +201,7 @@ export const PRODUCTS: Product[] = [
     name: "Organic Black Salt",
     description: " Organic Pure & natural Black Salt Powder",
     category: "Salts",
-    image: "/images/black salt.jpg",
+    image: `${BASE_IMAGE_PATH}/black salt.jpg`,
     type: "solid",
     sizes: [
       { size: "100g", price: 40 },
@@ -211,7 +214,7 @@ export const PRODUCTS: Product[] = [
     name: "A2 Gir Cow Bilona Ghee",
     description: " Organic, Pure & natural A2 Gir Cow Bilona Ghee",
     category: "Dairy",
-    image: "/images/a2 cow ghee.jpg",
+    image: `${BASE_IMAGE_PATH}/a2 cow ghee.jpg`,
     type: "liquid",
     sizes: [
       { size: "100ml", price: 250 },
@@ -226,7 +229,7 @@ export const PRODUCTS: Product[] = [
     name: "Organic Khand",
     description: " Organic, Pure & natural Khand",
     category: "Natural Sweetness",
-    image: "/images/khand.jpg",
+    image: `${BASE_IMAGE_PATH}/khand.jpg`,
     type: "solid",
     sizes: [
       { size: "200g", price: 40 },
@@ -240,7 +243,7 @@ export const PRODUCTS: Product[] = [
     name: "Organic Khand",
     description: " Organic, Pure & natural Khand",
     category: "Natural Sweetness",
-    image: "/images/khand.jpg",
+    image: `${BASE_IMAGE_PATH}/khand.jpg`,
     type: "solid",
     sizes: [
       { size: "200g", price: 40 },
@@ -254,7 +257,7 @@ export const PRODUCTS: Product[] = [
     name: "Desi Khand",
     description: " Pure & natural Desi Khand",
     category: "Natural Sweetness",
-    image: "/images/desi khand.webp",
+    image: `${BASE_IMAGE_PATH}/desi khand.webp`,
     type: "solid",
     sizes: [
       { size: "200g", price: 40 },
@@ -268,7 +271,7 @@ export const PRODUCTS: Product[] = [
     name: "Organic Jaggery (GUD)",
     description: "Organic, Pure & natural Jaggery (GUD)",
     category: "Natural Sweetness",
-    image: "/images/organic gud.jpg",
+    image: `${BASE_IMAGE_PATH}/organic gud.jpg`,
     type: "solid",
     sizes: [
       { size: "200g", price: 40 },
@@ -282,7 +285,7 @@ export const PRODUCTS: Product[] = [
     name: "Organic Jaggery Powder (Sakar)",
     description: "Organic, Pure & natural Jaggery powder (sakar)",
     category: "Natural Sweetness",
-    image: "/images/sakar.jpg",
+    image: `${BASE_IMAGE_PATH}/sakar.jpg`,
     type: "solid",
     sizes: [
       { size: "200g", price: 40 },
@@ -296,7 +299,7 @@ export const PRODUCTS: Product[] = [
     name: "Lichi Honey",
     description: "Pure & natural Lichi Honey",
     category: "Honey",
-    image: "/images/lichi honey.webp",
+    image: `${BASE_IMAGE_PATH}/lichi honey.webp`,
     type: "liquid",
     sizes: [
       { size: "100ml", price: 80 },
@@ -311,7 +314,7 @@ export const PRODUCTS: Product[] = [
     name: "Mustard Honey",
     description: "Pure & natural Mustard Honey",
     category: "Honey",
-    image: "/images/mustard honey.webp",
+    image: `${BASE_IMAGE_PATH}/mustard honey.webp`,
     type: "liquid",
     sizes: [
       { size: "100ml", price: 80 },
@@ -326,7 +329,7 @@ export const PRODUCTS: Product[] = [
     name: "Tulsi Honey",
     description: "Pure & natural Tulsi Honey",
     category: "Honey",
-    image: "/images/tulsi honey.png",
+    image: `${BASE_IMAGE_PATH}/tulsi honey.png`,
     type: "liquid",
     sizes: [
       { size: "100ml", price: 80 },
@@ -341,7 +344,7 @@ export const PRODUCTS: Product[] = [
     name: "Ajwain Honey",
     description: "Pure & natural Ajwain Honey",
     category: "Honey",
-    image: "/images/ajwain honey.webp",
+    image: `${BASE_IMAGE_PATH}/ajwain honey.webp`,
     type: "liquid",
     sizes: [
       { size: "100ml", price: 80 },
@@ -356,7 +359,7 @@ export const PRODUCTS: Product[] = [
     name: "Multiflora Honey",
     description: "Pure & natural Multiflora Honey",
     category: "Honey",
-    image: "/images/multi flora.webp",
+    image: `${BASE_IMAGE_PATH}/multi flora.webp`,
     type: "liquid",
     sizes: [
       { size: "100ml", price: 80 },
@@ -371,7 +374,7 @@ export const PRODUCTS: Product[] = [
     name: "Wild Honey",
     description: "Pure & natural Wild Honey",
     category: "Honey",
-    image: "/images/wild honey.png",
+    image: `${BASE_IMAGE_PATH}/wild honey.png`,
     type: "liquid",
     sizes: [
       { size: "100ml", price: 80 },
@@ -386,7 +389,7 @@ export const PRODUCTS: Product[] = [
     name: "Moong Whole",
     description: "Pure & natural Moong Whole",
     category: "Pulses",
-    image: "/images/green moong daal.webp",
+    image: `${BASE_IMAGE_PATH}/green moong daal.webp`,
     type: "solid",
     sizes: [
       { size: "200g", price: 40 },
@@ -400,7 +403,7 @@ export const PRODUCTS: Product[] = [
     name: "Moong Chilka",
     description: "Pure & natural Moong Chilka",
     category: "Pulses",
-    image: "/images/moong chilka.webp",
+    image: `${BASE_IMAGE_PATH}/moong chilka.webp`,
     type: "solid",
     sizes: [
       { size: "200g", price: 40 },
@@ -414,7 +417,7 @@ export const PRODUCTS: Product[] = [
     name: "Chana Whole",
     description: "Pure & natural Chana Whole",
     category: "Pulses",
-    image: "/images/chana.webp",
+    image: `${BASE_IMAGE_PATH}/chana.webp`,
     type: "solid",
     sizes: [
       { size: "200g", price: 40 },
@@ -428,7 +431,7 @@ export const PRODUCTS: Product[] = [
     name: "Chana Split",
     description: "Pure & natural Chana Split",
     category: "Pulses",
-    image: "/images/ChanaDal.webp",
+    image: `${BASE_IMAGE_PATH}/ChanaDal.webp`,
     type: "solid",
     sizes: [
       { size: "200g", price: 40 },
@@ -442,7 +445,7 @@ export const PRODUCTS: Product[] = [
     name: "Urad Daal Whole",
     description: "Pure & natural Urad Daal Whole",
     category: "Pulses",
-    image: "/images/urad daal whole.jpg",
+    image: `${BASE_IMAGE_PATH}/urad daal whole.jpg`,
     type: "solid",
     sizes: [
       { size: "200g", price: 40 },
@@ -456,7 +459,7 @@ export const PRODUCTS: Product[] = [
     name: "moong split washed",
     description: "Pure & Natural Moong Split Washed",
     category: "Pulses",
-    image: "/images/moong daal.jpg",
+    image: `${BASE_IMAGE_PATH}/moong daal.jpg`,
     type: "solid",
     sizes: [
       { size: "200g", price: 40 },
@@ -470,7 +473,7 @@ export const PRODUCTS: Product[] = [
     name: "Rajma",
     description: "Natural Rajma",
     category: "Pulses",
-    image: "/images/rajma.webp",
+    image: `${BASE_IMAGE_PATH}/rajma.webp`,
     type: "solid",
     sizes: [
       { size: "200g", price: 40 },
@@ -484,7 +487,7 @@ export const PRODUCTS: Product[] = [
     name: "Wheat Flour",
     description: "Natural Wheat flour",
     category: "Flours",
-    image: "/images/aata.webp",
+    image: `${BASE_IMAGE_PATH}/aata.webp`,
     type: "solid",
     sizes: [
       { size: "200g", price: 40 },
@@ -499,7 +502,7 @@ export const PRODUCTS: Product[] = [
     name: "Organic Bansi Gold Wheat Flour",
     description: "Organic MP 306 Natural Wheat flour",
     category: "Flours",
-    image: "/images/organic aata.jpg",
+    image: `${BASE_IMAGE_PATH}/organic aata.jpg`,
     type: "solid",
     sizes: [
       { size: "200g", price: 40 },
@@ -514,7 +517,7 @@ export const PRODUCTS: Product[] = [
     name: "Sprouted Wheat Flour",
     description: "Organic Sprouted Wheat Flour",
     category: "Flours",
-    image: "/images/Sprouted Wheat Flour.jpeg",
+    image: `${BASE_IMAGE_PATH}/Sprouted Wheat Flour.jpeg`,
     type: "solid",
     sizes: [
       { size: "200g", price: 40 },
@@ -528,7 +531,7 @@ export const PRODUCTS: Product[] = [
     name: "Mutigrain Flour",
     description: "Organic Mutigrain Flour",
     category: "Flours",
-    image: "/images/multi grain aata.jpeg",
+    image: `${BASE_IMAGE_PATH}/multi grain aata.jpeg`,
     type: "solid",
     sizes: [
       { size: "200g", price: 40 },
@@ -543,7 +546,7 @@ export const PRODUCTS: Product[] = [
     name: "Bajra Flour",
     description: "Organic Bajra Flour",
     category: "Flours",
-    image: "/images/bajara aata.webp",
+    image: `${BASE_IMAGE_PATH}/bajara aata.webp`,
     type: "solid",
     sizes: [
       { size: "200g", price: 40 },
@@ -557,7 +560,7 @@ export const PRODUCTS: Product[] = [
     name: "Makai Flour",
     description: "Organic Makai Flour",
     category: "Flours",
-    image: "/images/makai aata.jpg",
+    image: `${BASE_IMAGE_PATH}/makai aata.jpg`,
     type: "solid",
     sizes: [
       { size: "200g", price: 40 },
@@ -572,7 +575,7 @@ export const PRODUCTS: Product[] = [
     name: "Chana Flour",
     description: "Organic Chana Flour",
     category: "Flours",
-    image: "/images/Chana Flour.jpg",
+    image: `${BASE_IMAGE_PATH}/Chana Flour.jpg`,
     type: "solid",
     sizes: [
       { size: "200g", price: 40 },
@@ -586,7 +589,7 @@ export const PRODUCTS: Product[] = [
     name: "Jaw Flour",
     description: "Organic Jaw Flour",
     category: "Flours",
-    image: "/images/jaw aata.webp",
+    image: `${BASE_IMAGE_PATH}/jaw aata.webp`,
     type: "solid",
     sizes: [
       { size: "200g", price: 40 },
@@ -600,7 +603,7 @@ export const PRODUCTS: Product[] = [
     name: "Besan",
     description: "Organic Besan",
     category: "Flours",
-    image: "/images/besan.jpg",
+    image: `${BASE_IMAGE_PATH}/besan.jpg`,
     type: "solid",
     sizes: [
       { size: "200g", price: 40 },
@@ -614,7 +617,7 @@ export const PRODUCTS: Product[] = [
     name: "Jeera",
     description: "Organic Jeera",
     category: "Spices",
-    image: "/images/jeera.png",
+    image: `${BASE_IMAGE_PATH}/jeera.png`,
     type: "solid",
     sizes: [
       { size: "50g", price: 50 },
@@ -627,7 +630,7 @@ export const PRODUCTS: Product[] = [
     name: "Dhaniya Powder",
     description: "Organic Dhaniya Powder",
     category: "Spices",
-    image: "/images/dhaniya powder.webp",
+    image: `${BASE_IMAGE_PATH}/dhaniya powder.webp`,
     type: "solid",
     sizes: [
       { size: "50g", price: 50 },
@@ -640,7 +643,7 @@ export const PRODUCTS: Product[] = [
     name: "Lassi Masala Powder",
     description: "Organic Lassi Masla Powder",
     category: "Spices",
-    image: "/images/lassi massala.jpg",
+    image: `${BASE_IMAGE_PATH}/lassi massala.jpg`,
     type: "solid",
     sizes: [
       { size: "50g", price: 50 },
@@ -653,7 +656,7 @@ export const PRODUCTS: Product[] = [
     name: "Chaat Masala Powder",
     description: "Organic Lassi Masla Powder",
     category: "Spices",
-    image: "/images/chaat masala.jpg",
+    image: `${BASE_IMAGE_PATH}/chaat masala.jpg`,
     type: "solid",
     sizes: [
       { size: "50g", price: 50 },
@@ -666,7 +669,7 @@ export const PRODUCTS: Product[] = [
     name: "Sabji Masala Powder",
     description: "Organic Sabji Masla Powder",
     category: "Spices",
-    image: "/images/sabji masala.jpg",
+    image: `${BASE_IMAGE_PATH}/sabji masala.jpg`,
     type: "solid",
     sizes: [
       { size: "50g", price: 50 },
@@ -679,7 +682,7 @@ export const PRODUCTS: Product[] = [
     name: "Degi Mirchi Powder",
     description: "Organic Degi Mirchi Powder",
     category: "Spices",
-    image: "/images/degi mirch.webp",
+    image: `${BASE_IMAGE_PATH}/degi mirch.webp`,
     type: "solid",
     sizes: [
       { size: "100g", price: 50 },
@@ -692,7 +695,7 @@ export const PRODUCTS: Product[] = [
     name: "Kasturi Methi",
     description: "Organic Kasturi Methi",
     category: "Spices",
-    image: "/images/kasturi methi.jpg",
+    image: `${BASE_IMAGE_PATH}/kasturi methi.jpg`,
     type: "solid",
     sizes: [
       { size: "100g", price: 80 },
@@ -764,6 +767,7 @@ export const Products = () => {
     Record<string, ProductSize>
   >(Object.fromEntries(updatedProducts.map((p) => [p.id, p.sizes[0]])));
   const [hoveredProduct, setHoveredProduct] = useState<string | null>(null);
+  const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
 
   // Update URL when category changes
   useEffect(() => {
@@ -799,6 +803,13 @@ export const Products = () => {
     setSelectedSizes((prev) => ({
       ...prev,
       [productId]: size,
+    }));
+  };
+
+  const handleImageError = (productId: string) => {
+    setImageErrors(prev => ({
+      ...prev,
+      [productId]: true
     }));
   };
 
@@ -845,8 +856,9 @@ export const Products = () => {
                 onMouseLeave={() => setHoveredProduct(null)}
               >
                 <img
-                  src={product.image}
+                  src={imageErrors[product.id] ? '/images/placeholder.jpg' : product.image}
                   alt={product.name}
+                  onError={() => handleImageError(product.id)}
                   className={`w-full h-full object-cover absolute top-0 left-0 transition-opacity duration-300 ease-in-out ${
                     hoveredProduct === product.id ? 'opacity-0' : 'opacity-100'
                   }`}
