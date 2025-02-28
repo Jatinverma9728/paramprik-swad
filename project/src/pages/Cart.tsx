@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { validateCoupon } from '../constants/coupons';
 import { EmptyCartAnimation } from '../components/EmptyCartAnimation';
-import { PRODUCTS } from './Products'; // Change this line to import PRODUCTS array
+import { PRODUCTS, FEATURED_PRODUCTS } from '../data/products'; // Change this line to import PRODUCTS array
 
 // Add this font import at the top
 const FONT = "helvetica";
