@@ -22,7 +22,7 @@ export const PRODUCTS: Product[] = [
     hoverDescription: "Rich in antioxidants and anti-inflammatory properties.",
     category: "Spices",
     image: `${BASE_IMAGE_PATH}/turmric.jpg`,
-    hoverImage: `${BASE_IMAGE_PATH}/turmric.jpg`,
+    hoverImage: `${BASE_IMAGE_PATH}/aata.webp`,
     type: "solid",
     sizes: [
       { size: "100g", price: 50 },
@@ -52,7 +52,7 @@ export const PRODUCTS: Product[] = [
     description: "Premium quality organic red chili Powder.",
     category: "Spices",
     image: `${BASE_IMAGE_PATH}/red-chilli.webp`,
-    hoverImage: `${BASE_IMAGE_PATH}/red-chilli-benefits.jpg`,
+    hoverImage: `${BASE_IMAGE_PATH}/aata2-.webp`,
     hoverDescription: "Adds perfect heat and color to your dishes",
     type: "solid",
     sizes: [
@@ -716,7 +716,7 @@ const updatedProducts = PRODUCTS.map(product => {
   return {
     ...product,
     // Create hover image path by adding -benefits before the extension
-    hoverImage: `${imageBasePath}-benefits.${imageExtension}`,
+    hoverImage: `${imageBasePath}.${imageExtension}`,
     // Add descriptive hover text based on category
     hoverDescription: getHoverDescription(product.category, product.name)
   };
