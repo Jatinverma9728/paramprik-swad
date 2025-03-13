@@ -70,7 +70,7 @@ const FEATURED_PRODUCTS = [
     hoverDescription: "Natural and unrefined. Enhances the flavor of your dishes.",
     category: "Salts",
     image: "/images/Pink-Salt-powder.jpg",
-    hoverImage: "/images/pink-salt-hover.jpg",
+    hoverImage: "/images/pinksalt2.webp",
     type: "solid",
     sizes: [
       { size: "100g", price: 40 },
@@ -84,7 +84,7 @@ const FEATURED_PRODUCTS = [
     hoverDescription: "Rich in vitamins and nutrients. Great for cooking and skincare.",
     category: "Oils",
     image: "/images/almond oil.jpg",
-    hoverImage: "/images/almond-oil-hover.jpg",
+    hoverImage: "/images/Almondoil2.webp",
     type: "liquid",
     sizes: [
       { size: "100ml", price: 250 },
@@ -101,7 +101,7 @@ const FEATURED_PRODUCTS = [
     hoverDescription: "Stone-ground and unbleached. Ideal for baking and cooking.",
     category: "Flours",
     image: "/images/organic aata.jpg",
-    hoverImage: "/images/wheat-flour-hover.jpg",
+    hoverImage: "/images/aata2.webp",
     type: "solid",
     sizes: [
       { size: "200g", price: 40 },
@@ -118,7 +118,7 @@ const FEATURED_PRODUCTS = [
     hoverDescription: "Natural sweetener. Perfect for desserts and beverages.",
     category: "Natural Sweetness",
     image: "/images/sakar.jpg",
-    hoverImage: "/images/jaggery-hover.jpg",
+    hoverImage: "/images/sakar2.jpg",
     type: "solid",
     sizes: [
       { size: "200g", price: 40 },
@@ -133,7 +133,7 @@ const FEATURED_PRODUCTS = [
     hoverDescription: "Rich in flavor and nutrients. Perfect for sweetening and cooking.",
     category: "Honey",
     image: "/images/mustard honey.webp",
-    hoverImage: "/images/mustard-honey-hover.jpg",
+    hoverImage: "/images/mustard honey2.webp",
     type: "liquid",
     sizes: [
       { size: "100ml", price: 80 },
@@ -149,7 +149,7 @@ const FEATURED_PRODUCTS = [
     hoverDescription: "Rich in protein and fiber. Ideal for soups and salads.",
     category: "Pulses",
     image: "/images/green moong daal.webp",
-    hoverImage: "/images/moong-whole-hover.jpg",
+    hoverImage: "/images/wholemoong2.webp",
     type: "solid",
     sizes: [
       { size: "200g", price: 40 },
