@@ -23,7 +23,7 @@ const FEATURED_PRODUCTS = [
     price: 50,
     category: "Spices",
     image: "/images/turmric.jpg",
-    hoverImage: "/images/ghee.jpg",
+    hoverImage: "/images/haldi 2.webp",
     type: "solid",
     sizes: [
       { size: "100g", price: 50 },
@@ -39,7 +39,7 @@ const FEATURED_PRODUCTS = [
     price: 650,
     category: "Dairy",
     image: "/images/ghee.jpg",
-    hoverImage: "/images/ghee-hover.jpg",
+    hoverImage: "/images/ghee2.webp",
     sizes: [
       { size: "200ml", price: 300 },
       { size: "500ml", price: 600 },
@@ -55,7 +55,7 @@ const FEATURED_PRODUCTS = [
     category: "Rice",
     price: 230,
     image: "/images/rice-3506194_1920.jpg",
-    hoverImage: "/images/rice-hover.jpg",
+    hoverImage: "/images/rice2.webp",
     type: "solid",
     sizes: [
       { size: "500g", price: 115 },
