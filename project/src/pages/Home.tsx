@@ -1,11 +1,27 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ShoppingCart, Heart, ChevronDown, ChevronUp, Star, Clock, ShieldCheck, Truck, Timer, Gift, Percent } from "lucide-react";
+import {
+  ShoppingCart,
+  Heart,
+  ChevronDown,
+  ChevronUp,
+  Star,
+  Clock,
+  ShieldCheck,
+  Truck,
+  Timer,
+  Gift,
+  Percent,
+} from "lucide-react";
 import { useStore } from "../store/useStore";
 import { Product, ProductSize } from "../types";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { animateCategories, animateProducts, cleanupScrollTriggers } from "../animations/scrollAnimations";
+import {
+  animateCategories,
+  animateProducts,
+  cleanupScrollTriggers,
+} from "../animations/scrollAnimations";
 import { ScrollToTopButton } from "../components/ScrollToTopButton";
 import { Toast } from "../components/Toast";
 import { AnimatedHeart } from "../components/AnimatedHeart"; // Add this import
@@ -19,7 +35,8 @@ const FEATURED_PRODUCTS = [
     name: "Organic Turmeric Powder",
     description:
       "Premium quality organic turmeric powder with high curcumin content.",
-    hoverDescription: "Rich in antioxidants and anti-inflammatory properties. Perfect for cooking and medicinal uses.",
+    hoverDescription:
+      "Rich in antioxidants and anti-inflammatory properties. Perfect for cooking and medicinal uses.",
     price: 50,
     category: "Spices",
     image: "/images/turmric.jpg",
@@ -35,7 +52,8 @@ const FEATURED_PRODUCTS = [
     id: "2",
     name: "Pure Desi Ghee",
     description: "Traditional clarified butter made from pure cow milk.",
-    hoverDescription: "Rich in flavor and nutrients. Ideal for cooking and baking.",
+    hoverDescription:
+      "Rich in flavor and nutrients. Ideal for cooking and baking.",
     price: 650,
     category: "Dairy",
     image: "/images/ghee.jpg",
@@ -51,7 +69,8 @@ const FEATURED_PRODUCTS = [
     id: "4",
     name: "Premium Basmati Rice",
     description: "Aged premium basmati rice with long grains.",
-    hoverDescription: "Perfect for biryanis and pilafs. Aromatic and flavorful.",
+    hoverDescription:
+      "Perfect for biryanis and pilafs. Aromatic and flavorful.",
     category: "Rice",
     price: 230,
     image: "/images/rice-3506194_1920.jpg",
@@ -67,7 +86,8 @@ const FEATURED_PRODUCTS = [
     id: "13",
     name: "Organic Pink salt/Sindha Salt",
     description: " Organic Pure & natural Pink salt/Sindha Salt Powder",
-    hoverDescription: "Natural and unrefined. Enhances the flavor of your dishes.",
+    hoverDescription:
+      "Natural and unrefined. Enhances the flavor of your dishes.",
     category: "Salts",
     image: "/images/Pink-Salt-powder.jpg",
     hoverImage: "/images/pinksalt2.webp",
@@ -81,7 +101,8 @@ const FEATURED_PRODUCTS = [
     id: "12",
     name: "Organic Almond Oil",
     description: " Organic Pure & natural cold-pressed Almond Oil",
-    hoverDescription: "Rich in vitamins and nutrients. Great for cooking and skincare.",
+    hoverDescription:
+      "Rich in vitamins and nutrients. Great for cooking and skincare.",
     category: "Oils",
     image: "/images/almond oil.jpg",
     hoverImage: "/images/Almondoil2.webp",
@@ -98,7 +119,8 @@ const FEATURED_PRODUCTS = [
     id: "35",
     name: "Organic Bansi Gold Wheat Flour",
     description: "Organic MP 306 Natural Wheat flour",
-    hoverDescription: "Stone-ground and unbleached. Ideal for baking and cooking.",
+    hoverDescription:
+      "Stone-ground and unbleached. Ideal for baking and cooking.",
     category: "Flours",
     image: "/images/organic aata.jpg",
     hoverImage: "/images/aata2.webp",
@@ -130,7 +152,8 @@ const FEATURED_PRODUCTS = [
     id: "22",
     name: "Mustard Honey",
     description: "Pure & natural Mustard Honey",
-    hoverDescription: "Rich in flavor and nutrients. Perfect for sweetening and cooking.",
+    hoverDescription:
+      "Rich in flavor and nutrients. Perfect for sweetening and cooking.",
     category: "Honey",
     image: "/images/mustard honey.webp",
     hoverImage: "/images/mustard honey2.webp",
@@ -194,7 +217,7 @@ export const Home = () => {
   return (
     <div className="relative">
       <Toast {...toast} />
-      
+
       {/* Hero Section */}
       <div className="relative h-screen">
         <div className="absolute inset-0">
@@ -230,7 +253,9 @@ export const Home = () => {
       <div className="py-20 bg-amber-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-amber-900 mb-4">Discover Our Categories</h2>
+            <h2 className="text-4xl font-bold text-amber-900 mb-4">
+              Discover Our Categories
+            </h2>
             <div className="w-24 h-1 bg-amber-500 mx-auto"></div>
           </div>
           <div
@@ -290,8 +315,12 @@ export const Home = () => {
       <div className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <span className="text-amber-600 text-sm uppercase tracking-wider">Our Selection</span>
-            <h2 className="text-4xl font-bold text-amber-900 mt-2 mb-4">Featured Products</h2>
+            <span className="text-amber-600 text-sm uppercase tracking-wider">
+              Our Selection
+            </span>
+            <h2 className="text-4xl font-bold text-amber-900 mt-2 mb-4">
+              Featured Products
+            </h2>
             <div className="w-24 h-1 bg-amber-500 mx-auto"></div>
           </div>
           <p className="text-amber-800 text-center mb-12 max-w-2xl mx-auto">
@@ -423,14 +452,28 @@ export const Home = () => {
       <div className="py-20 bg-amber-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-amber-900 mb-4">What Our Customers Say</h2>
+            <h2 className="text-4xl font-bold text-amber-900 mb-4">
+              What Our Customers Say
+            </h2>
             <div className="w-24 h-1 bg-amber-500 mx-auto mb-8"></div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { name: 'Priya S.', rating: 5, text: 'Amazing quality spices, just like my grandmother used to use!' },
-              { name: 'Rahul M.', rating: 5, text: 'The organic ghee is absolutely pure and authentic.' },
-              { name: 'Anita R.', rating: 5, text: 'Great service and quick delivery. Will order again!' }
+              {
+                name: "Priya S.",
+                rating: 5,
+                text: "Amazing quality spices, just like my grandmother used to use!",
+              },
+              {
+                name: "Rahul M.",
+                rating: 5,
+                text: "The organic ghee is absolutely pure and authentic.",
+              },
+              {
+                name: "Anita R.",
+                rating: 5,
+                text: "Great service and quick delivery. Will order again!",
+              },
             ].map((review, index) => (
               <div key={index} className="bg-white p-6 rounded-xl shadow-md">
                 <div className="flex text-amber-500 mb-4">
@@ -484,14 +527,35 @@ export const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {[
-              { icon: Star, title: 'Premium Quality', description: 'Handpicked finest ingredients' },
-              { icon: Clock, title: 'Ancient Recipes', description: 'Traditional processing methods' },
-              { icon: ShieldCheck, title: 'Certified Organic', description: '100% natural products' },
-              { icon: Truck, title: 'Fast Delivery', description: 'Nationwide shipping' },
+              {
+                icon: Star,
+                title: "Premium Quality",
+                description: "Handpicked finest ingredients",
+              },
+              {
+                icon: Clock,
+                title: "Ancient Recipes",
+                description: "Traditional processing methods",
+              },
+              {
+                icon: ShieldCheck,
+                title: "Certified Organic",
+                description: "100% natural products",
+              },
+              {
+                icon: Truck,
+                title: "Fast Delivery",
+                description: "Nationwide shipping",
+              },
             ].map((benefit, index) => (
-              <div key={index} className="flex flex-col items-center text-center p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow">
+              <div
+                key={index}
+                className="flex flex-col items-center text-center p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow"
+              >
                 <benefit.icon className="w-12 h-12 text-amber-600 mb-4" />
-                <h3 className="text-lg font-semibold text-amber-900 mb-2">{benefit.title}</h3>
+                <h3 className="text-lg font-semibold text-amber-900 mb-2">
+                  {benefit.title}
+                </h3>
                 <p className="text-amber-700">{benefit.description}</p>
               </div>
             ))}
