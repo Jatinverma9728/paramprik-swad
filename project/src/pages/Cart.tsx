@@ -30,6 +30,264 @@ const checkoutSchema = z.object({
 
 type CheckoutForm = z.infer<typeof checkoutSchema>;
 
+// Add this type for step tracking
+type Step = 'cart' | 'delivery' | 'payment' | 'confirmation';
+
+// Add step-specific components
+const CartStep = ({ onNext, cart, handleQuantityUpdate, removeFromCart }: any) => (
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    className="space-y-4"
+  >
+    {cart.map((item: any) => (
+      <motion.div
+        key={item.id}
+        layout
+        className="bg-white p-6 rounded-lg shadow-md flex gap-4"
+      >
+        <img 
+          src={item.image} 
+          alt={item.name}
+          className="w-24 h-24 object-cover rounded-lg"
+        />
+        <div className="flex-1">
+          <h3 className="font-medium text-lg text-amber-900">{item.name}</h3>
+          <p className="text-amber-600">Size: {item.selectedSize?.size}</p>
+          <div className="mt-2 flex items-center gap-4">
+            <div className="flex items-center gap-2 bg-amber-50 p-1 rounded">
+              <button
+                onClick={() => handleQuantityUpdate(item.id, item.quantity - 1)}
+                className="p-1 hover:bg-amber-100 rounded"
+              >
+                <Minus className="w-4 h-4" />
+              </button>
+              <span className="w-8 text-center">{item.quantity}</span>
+              <button
+                onClick={() => handleQuantityUpdate(item.id, item.quantity + 1)}
+                className="p-1 hover:bg-amber-100 rounded"
+              >
+                <Plus className="w-4 h-4" />
+              </button>
+            </div>
+            <button
+              onClick={() => removeFromCart(item.id)}
+              className="text-red-500 hover:text-red-600"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+        <div className="text-right">
+          <p className="font-bold text-amber-900">
+            ₹{((item.selectedSize?.price || 0) * item.quantity).toFixed(2)}
+          </p>
+          <p className="text-sm text-amber-600">
+            ₹{(item.selectedSize?.price || 0).toFixed(2)} each
+          </p>
+        </div>
+      </motion.div>
+    ))}
+    <div className="mt-6">
+      <button
+        onClick={onNext}
+        className="w-full bg-amber-500 text-white py-3 rounded-lg hover:bg-amber-600 transition-colors flex items-center justify-center gap-2"
+      >
+        Continue to Delivery
+        <ChevronRight className="w-4 h-4" />
+      </button>
+    </div>
+  </motion.div>
+);
+
+const DeliveryStep = ({ onNext, onBack, formData, setFormData, errors }: any) => (
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    className="bg-white p-6 rounded-lg shadow-md"
+  >
+    <h3 className="text-xl font-semibold text-amber-900 mb-6">Delivery Details</h3>
+    <form onSubmit={(e) => { e.preventDefault(); onNext(); }} className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {[
+          { name: 'name', label: 'Full Name', type: 'text' },
+          { name: 'email', label: 'Email Address', type: 'email' },
+          { name: 'phone', label: 'Phone Number', type: 'tel' },
+          { name: 'address', label: 'Delivery Address', type: 'text' },
+          { name: 'city', label: 'City', type: 'text' },
+          { name: 'pincode', label: 'PIN Code', type: 'text' }
+        ].map(field => (
+          <div key={field.name}>
+            <label className="block text-sm font-medium text-amber-700 mb-1">
+              {field.label}
+              <span className="text-red-500">*</span>
+            </label>
+            <input
+              type={field.type}
+              value={formData[field.name]}
+              onChange={e => setFormData({ ...formData, [field.name]: e.target.value })}
+              className={`w-full p-2 border rounded-lg ${
+                errors[field.name] ? 'border-red-500' : 'border-amber-200'
+              } focus:ring-2 focus:ring-amber-500`}
+            />
+            {errors[field.name] && (
+              <p className="mt-1 text-sm text-red-500">{errors[field.name]}</p>
+            )}
+          </div>
+        ))}
+      </div>
+      
+      <div className="flex gap-4 mt-8">
+        <button
+          type="button"
+          onClick={onBack}
+          className="flex-1 px-4 py-3 bg-amber-50 text-amber-800 rounded-lg hover:bg-amber-100"
+        >
+          Back to Cart
+        </button>
+        <button
+          type="submit"
+          className="flex-1 px-4 py-3 bg-amber-500 text-white rounded-lg hover:bg-amber-600"
+        >
+          Continue to Payment
+        </button>
+      </div>
+    </form>
+  </motion.div>
+);
+
+const PaymentStep = ({ onNext, onBack, total, onApplyCoupon, appliedCoupon, couponError }: any) => {
+  const [selectedPayment, setSelectedPayment] = useState('cod');
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="bg-white p-6 rounded-lg shadow-md"
+    >
+      <h3 className="text-xl font-semibold text-amber-900 mb-6">Payment Method</h3>
+      
+      {/* Coupon Section with enhanced UI */}
+      <div className="mb-8 bg-amber-50/50 p-6 rounded-lg border border-amber-100">
+        <h4 className="text-amber-900 font-medium mb-3 flex items-center gap-2">
+          <Package className="h-5 w-5" />
+          Apply Coupon
+        </h4>
+        <form onSubmit={onApplyCoupon} className="space-y-2">
+          <div className="flex gap-2">
+            <input
+              type="text"
+              name="couponCode"
+              placeholder="Got a promo code?"
+              className="flex-1 p-3 border border-amber-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white"
+            />
+            <button
+              type="submit"
+              className="px-6 py-3 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-all transform active:scale-95"
+            >
+              Apply
+            </button>
+          </div>
+          {couponError && (
+            <motion.p 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-red-500 text-sm flex items-center gap-1"
+            >
+              <AlertCircle className="h-4 w-4" />
+              {couponError}
+            </motion.p>
+          )}
+          {appliedCoupon && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="bg-green-50 p-3 rounded-lg border border-green-100"
+            >
+              <p className="text-green-600 text-sm flex items-center gap-2">
+                <CheckCircle className="h-4 w-4" />
+                <span className="font-medium">Coupon {appliedCoupon.code} applied!</span>
+              </p>
+              <p className="text-green-700 text-xs ml-6">
+                You saved ₹{appliedCoupon.discount}
+              </p>
+            </motion.div>
+          )}
+        </form>
+      </div>
+
+      {/* Payment Methods with enhanced UI */}
+      <div className="space-y-4 mb-8">
+        <h4 className="text-amber-900 font-medium flex items-center gap-2">
+          <Package className="h-5 w-5" />
+          Select Payment Method
+        </h4>
+        
+        <label className="block p-4 border-2 border-amber-200 rounded-lg hover:bg-amber-50 cursor-pointer transition-all">
+          <div className="flex items-center gap-3">
+            <input
+              type="radio"
+              name="payment"
+              value="cod"
+              checked={selectedPayment === 'cod'}
+              onChange={(e) => setSelectedPayment(e.target.value)}
+              className="text-amber-500 focus:ring-amber-500"
+            />
+            <div>
+              <p className="font-medium text-amber-900">Cash on Delivery</p>
+              <p className="text-sm text-amber-600">Pay when you receive your order</p>
+            </div>
+          </div>
+        </label>
+
+        {/* Disabled payment methods */}
+        {[
+          { id: 'upi', label: 'UPI Payment', description: 'Coming soon' },
+          { id: 'card', label: 'Credit/Debit Card', description: 'Coming soon' }
+        ].map(method => (
+          <div
+            key={method.id}
+            className="block p-4 border-2 border-gray-100 rounded-lg bg-gray-50 opacity-50 cursor-not-allowed"
+          >
+            <div className="flex items-center gap-3">
+              <input
+                type="radio"
+                disabled
+                className="text-gray-400"
+              />
+              <div>
+                <p className="font-medium text-gray-400">{method.label}</p>
+                <p className="text-sm text-gray-400">{method.description}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Navigation Buttons */}
+      <div className="flex gap-4">
+        <button
+          onClick={onBack}
+          className="flex-1 px-4 py-3 bg-amber-50 text-amber-800 rounded-lg hover:bg-amber-100 transition-all transform active:scale-98"
+        >
+          Back
+        </button>
+        <button
+          onClick={() => selectedPayment === 'cod' && onNext()}
+          className={`flex-1 px-4 py-3 rounded-lg transition-all transform active:scale-98 flex items-center justify-center gap-2
+            ${selectedPayment === 'cod' 
+              ? 'bg-amber-500 text-white hover:bg-amber-600' 
+              : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}
+        >
+          Place Order
+          <Package className="w-4 h-4" />
+        </button>
+      </div>
+    </motion.div>
+  );
+};
+
+// Update the main Cart component
 export const Cart = () => {
   const { cart, removeFromCart, updateQuantity, addToCart, clearCart, addOrder, lastOrder } = useStore();
   const [showConfirmDelete, setShowConfirmDelete] = useState<string | null>(null);
@@ -42,29 +300,32 @@ export const Cart = () => {
 
   const [showShareModal, setShowShareModal] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [currentStep, setCurrentStep] = useState<Step>('cart');
 
   const subtotal = cart.reduce((sum, item) => {
     const price = item.selectedSize?.price || item.sizes[0].price;
     return sum + price * item.quantity;
   }, 0);
   const shipping = subtotal > 149 ? 0 : 50;
-  const discount = 0; // You can implement coupon logic here
-  const total = subtotal + shipping - discount;
+  const discount = appliedCoupon?.discount || 0; // Change this line
+  const total = subtotal + shipping - discount; // This will now properly include the coupon discount
 
   const deliveryDate = new Date();
   deliveryDate.setDate(deliveryDate.getDate() + 3);
 
   const handleCouponSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const result = validateCoupon(couponCode, subtotal);
+    const formData = new FormData(e.target as HTMLFormElement);
+    const code = formData.get('couponCode') as string;
+    
+    const result = validateCoupon(code, subtotal);
     
     if (result.isValid) {
       setAppliedCoupon({ 
-        code: couponCode.toUpperCase(), 
+        code: code.toUpperCase(), 
         discount: result.discount 
       });
       setCouponError("");
-      setCouponCode("");
     } else {
       setCouponError(result.message);
       setAppliedCoupon(null);
@@ -196,6 +457,73 @@ export const Cart = () => {
 
   const [orderPlaced, setOrderPlaced] = useState(false);
 
+  // Add this helper function for step status
+  const getStepStatus = (step: Step) => {
+    const steps: Step[] = ['cart', 'delivery', 'payment', 'confirmation'];
+    const currentIndex = steps.indexOf(currentStep);
+    const stepIndex = steps.indexOf(step);
+
+    if (stepIndex < currentIndex) return 'completed';
+    if (stepIndex === currentIndex) return 'current';
+    return 'upcoming';
+  };
+
+  // Replace the existing stepper UI with this enhanced version
+  const renderStepper = () => (
+    <div className="mb-8 relative">
+      <div className="flex items-center justify-between max-w-3xl mx-auto">
+        {[
+          { id: 'cart', icon: ShoppingCart, label: 'Cart' },
+          { id: 'delivery', icon: Truck, label: 'Delivery' },
+          { id: 'payment', icon: Package, label: 'Payment' },
+          { id: 'confirmation', icon: CheckCircle, label: 'Confirmation' }
+        ].map((step, index) => (
+          <div key={step.id} className="flex items-center flex-1">
+            <div className="flex flex-col items-center relative">
+              <motion.div
+                initial={false}
+                animate={{
+                  backgroundColor: getStepStatus(step.id as Step) === 'completed' 
+                    ? '#F59E0B' 
+                    : getStepStatus(step.id as Step) === 'current'
+                    ? '#FCD34D'
+                    : '#FEF3C7',
+                  scale: getStepStatus(step.id as Step) === 'current' ? 1.1 : 1
+                }}
+                className={`rounded-full h-12 w-12 flex items-center justify-center
+                  ${getStepStatus(step.id as Step) === 'completed' ? 'text-white' : 'text-amber-800'}
+                  shadow-lg transition-all duration-300`}
+              >
+                {getStepStatus(step.id as Step) === 'completed' ? (
+                  <CheckCircle className="h-6 w-6" />
+                ) : (
+                  <step.icon className="h-6 w-6" />
+                )}
+              </motion.div>
+              <span className={`mt-2 text-sm font-medium
+                ${getStepStatus(step.id as Step) === 'current' ? 'text-amber-800' : 'text-amber-600'}`}>
+                {step.label}
+              </span>
+            </div>
+            {index < 3 && (
+              <div className="flex-1 h-0.5 mx-4">
+                <motion.div
+                  initial={false}
+                  animate={{
+                    backgroundColor: getStepStatus(step.id as Step) === 'completed' 
+                      ? '#F59E0B' 
+                      : '#FEF3C7'
+                  }}
+                  className="h-full transition-colors duration-300"
+                />
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
   // Update handleCheckout function
   const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -230,10 +558,18 @@ export const Cart = () => {
         }
       };
 
-      // Add order to store and clear cart
-      addOrder(orderPayload);
-      setOrderPlaced(true);
-      setIsCheckoutOpen(false);
+      // Update step progression
+      if (currentStep === 'cart') {
+        setCurrentStep('delivery');
+      } else if (currentStep === 'delivery') {
+        setCurrentStep('payment');
+      } else if (currentStep === 'payment') {
+        setCurrentStep('confirmation');
+        // Existing order completion logic
+        addOrder(orderPayload);
+        setOrderPlaced(true);
+        setIsCheckoutOpen(false);
+      }
 
     } catch (error) {
       console.error("Checkout error:", error);
@@ -619,6 +955,73 @@ export const Cart = () => {
     );
   };
 
+  // Add this to handle step rendering
+  const renderCurrentStep = () => {
+    switch (currentStep) {
+      case 'cart':
+        return (
+          <CartStep
+            cart={cart}
+            handleQuantityUpdate={handleQuantityUpdate}
+            removeFromCart={removeFromCart}
+            onNext={() => setCurrentStep('delivery')}
+          />
+        );
+      case 'delivery':
+        return (
+          <DeliveryStep
+            formData={checkoutForm}
+            setFormData={setCheckoutForm}
+            errors={formErrors}
+            onNext={() => setCurrentStep('payment')}
+            onBack={() => setCurrentStep('cart')}
+          />
+        );
+      case 'payment':
+        return (
+          <PaymentStep
+            total={total}
+            onNext={() => {
+              setCurrentStep('confirmation');
+              handlePlaceOrder();
+            }}
+            onBack={() => setCurrentStep('delivery')}
+            onApplyCoupon={handleCouponSubmit}
+            appliedCoupon={appliedCoupon}
+            couponError={couponError}
+          />
+        );
+      case 'confirmation':
+        return renderOrderSuccess();
+      default:
+        return null;
+    }
+  };
+
+  // Add this function to handle order placement
+  const handlePlaceOrder = () => {
+    try {
+      const orderPayload = {
+        orderItems: cart,
+        customerInfo: checkoutForm,
+        orderSummary: {
+          subtotal,
+          shipping,
+          discount: appliedCoupon?.discount || 0,
+          total: subtotal + shipping - (appliedCoupon?.discount || 0) // Update this line
+        }
+      };
+      
+      addOrder(orderPayload);
+      setOrderPlaced(true);
+      clearCart();
+    } catch (error) {
+      console.error('Error placing order:', error);
+      setCheckoutError('Failed to place order. Please try again.');
+    }
+  };
+
+  // Update the return statement
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex items-center gap-4 mb-8">
@@ -629,234 +1032,29 @@ export const Cart = () => {
           <ArrowLeft className="h-5 w-5" />
           Continue Shopping
         </Link>
-        <h2 className="text-3xl font-bold text-amber-900">Shopping Cart</h2>
+        <h2 className="text-3xl font-bold text-amber-900">Checkout</h2>
       </div>
 
-      <div className="mb-8">
-        <div className="flex items-center justify-between max-w-2xl mx-auto">
-          {["Cart", "Delivery", "Payment", "Confirmation"].map(
-            (step, index) => (
-              <div key={step} className="flex items-center">
-                <div
-                  className={`rounded-full h-8 w-8 flex items-center justify-center ${
-                    index === 0
-                      ? "bg-amber-500 text-white"
-                      : "bg-amber-100 text-amber-500"
-                  }`}
-                >
-                  {index + 1}
-                </div>
-                {index < 3 && (
-                  <div className="h-1 w-16 mx-2 bg-amber-100">
-                    <div
-                      className={`h-full ${
-                        index === 0 ? "bg-amber-500" : ""
-                      } transition-all duration-300`}
-                    ></div>
-                  </div>
-                )}
-              </div>
-            )
-          )}
-        </div>
-      </div>
+      {renderStepper()}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-4">
-          <AnimatePresence>
-            {cart.map((item) => (
-              <motion.div
-                key={item.id}
-                layout
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, x: -100 }}
-                className="bg-white p-6 rounded-lg shadow-md"
-              >
-                <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-                  <div className="relative group">
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="w-32 h-32 object-cover rounded-lg transition-transform group-hover:scale-105"
-                    />
-                    {item.inStock ? (
-                      <span className="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">
-                        In Stock
-                      </span>
-                    ) : (
-                      <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                        Out of Stock
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex-grow space-y-2">
-                    <h3 className="text-xl font-semibold text-amber-900">
-                      {item.name}
-                    </h3>
-                    <p className="text-amber-700 text-sm">{item.description}</p>
-                    <div className="flex items-center gap-4">
-                      <span className="text-amber-600 text-sm">
-                        Size: {item.selectedSize?.size || item.sizes[0].size}
-                      </span>
-                      <span className="text-amber-900 font-bold">
-                        ₹
-                        {(
-                          item.selectedSize?.price || item.sizes[0].price
-                        ).toFixed(2)}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-end gap-4">
-                    <div className="flex items-center gap-2 bg-amber-50 p-2 rounded-lg">
-                      <button
-                        onClick={() =>
-                          handleQuantityUpdate(item.id, item.quantity - 1)
-                        }
-                        className="p-1 rounded-full bg-amber-100 text-amber-800 hover:bg-amber-200 transition-colors"
-                      >
-                        <Minus className="h-4 w-4" />
-                      </button>
-                      <input
-                        type="number"
-                        value={item.quantity}
-                        onChange={(e) =>
-                          handleQuantityUpdate(
-                            item.id,
-                            parseInt(e.target.value) || 0
-                          )
-                        }
-                        className="w-12 text-center bg-transparent"
-                      />
-                      <button
-                        onClick={() =>
-                          handleQuantityUpdate(item.id, item.quantity + 1)
-                        }
-                        className="p-1 rounded-full bg-amber-100 text-amber-800 hover:bg-amber-200 transition-colors"
-                      >
-                        <Plus className="h-4 w-4" />
-                      </button>
-                    </div>
-                    <button
-                      onClick={() => setShowConfirmDelete(item.id)}
-                      className="text-red-500 hover:text-red-600 flex items-center gap-1 text-sm"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                      Remove
-                    </button>
-                  </div>
-                </div>
-
-                {showConfirmDelete === item.id && (
-                  <div className="mt-4 p-4 bg-red-50 rounded-lg">
-                    <p className="text-red-700 mb-2">
-                      Are you sure you want to remove this item?
-                    </p>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => {
-                          removeFromCart(item.id);
-                          setShowConfirmDelete(null);
-                        }}
-                        className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-                      >
-                        Yes, remove
-                      </button>
-                      <button
-                        onClick={() => setShowConfirmDelete(null)}
-                        className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </motion.div>
-            ))}
-          </AnimatePresence>
+        {/* Main Content */}
+        <div className="lg:col-span-2">
+          {renderCurrentStep()}
         </div>
 
-        <div className="lg:col-span-1 space-y-4">
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-semibold text-amber-900 mb-6">
-              Order Summary
-            </h3>
-            {renderOrderSummary()}
-
-            <form onSubmit={handleCouponSubmit} className="mb-6">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={couponCode}
-                  onChange={(e) => setCouponCode(e.target.value)}
-                  placeholder="Enter coupon code"
-                  className="flex-grow p-2 border border-amber-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
-                />
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-amber-100 text-amber-800 rounded-lg hover:bg-amber-200"
-                >
-                  Apply
-                </button>
-              </div>
-              {couponError && (
-                <p className="text-red-500 text-sm mt-2 flex items-center gap-1">
-                  <AlertCircle className="h-4 w-4" />
-                  {couponError}
-                </p>
-              )}
-            </form>
-
-            <button 
-              onClick={() => setIsCheckoutOpen(true)}
-              className="w-full bg-amber-500 text-white py-3 rounded-lg hover:bg-amber-600 transition-colors mb-4"
-            >
-              Proceed to Checkout
-            </button>
-
-            <div className="space-y-3 text-sm text-amber-700">
-              <div className="flex items-center gap-2">
-                <Shield className="h-4 w-4" />
-                <span>Secure checkout</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Truck className="h-4 w-4" />
-                <span>Free shipping on orders over ₹150</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Clock className="h-4 w-4" />
-                <span>Delivery within 2-3 business days</span>
-              </div>
+        {/* Order Summary Sidebar - Only show in cart and payment steps */}
+        {(currentStep === 'cart' || currentStep === 'payment') && (
+          <div className="lg:col-span-1">
+            <div className="bg-white p-6 rounded-lg shadow-md sticky top-8">
+              <h3 className="text-lg font-semibold text-amber-900 mb-4">
+                Order Summary
+              </h3>
+              {renderOrderSummary()}
             </div>
           </div>
-          {renderQuickActions()}
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <div className="flex items-center gap-3 mb-4">
-              <Timer className="h-5 w-5 text-amber-600" />
-              <h4 className="font-semibold text-amber-900">
-                Delivery Estimate
-              </h4>
-            </div>
-            <div className="bg-amber-50 p-4 rounded-lg">
-              <p className="text-amber-800 text-sm mb-2">
-                Estimated delivery by:
-              </p>
-              <p className="text-lg font-semibold text-amber-900">
-                {deliveryDate.toLocaleDateString("en-US", {
-                  weekday: "long",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </p>
-            </div>
-          </div>
-  
-          {renderRecommendedProducts()}
-        </div>
+        )}
       </div>
-
-      {renderShareModal()}
-      {renderCheckoutForm()}
     </div>
   );
 };
