@@ -4,9 +4,7 @@
   <a href="hh" target="_blank">
     <img alt="License: h1" src="https://img.shields.io/badge/License-h1-yellow.svg" />
   </a>
-  <a href="https://twitter.com/htt" target="_blank">
-    <img alt="Twitter: htt" src="https://img.shields.io/twitter/follow/htt.svg?style=social" />
-  </a>
+ 
 </p>
 
 > Paramprik Swad - A Taste of Tradition
