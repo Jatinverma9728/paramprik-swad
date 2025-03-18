@@ -12,6 +12,8 @@ import { About } from "./pages/About";
 import { ShippingPolicy } from "./pages/ShippingPolicy";
 import Loading from "./components/Loading";
 import { AdminOrders } from './pages/AdminOrders';
+import { AdminDashboard } from './pages/AdminDashboard';
+import AdminLayoutComponent from './AdminLayout'; // Import AdminLayout
 
 if (!import.meta.env.VITE_CLERK_PUBLISHABLE_KEY) {
   throw new Error("Missing Publishable Key");
@@ -65,7 +67,7 @@ function App() {
             element={
               <SignedIn>
                 <AdminCheck>
-                  <AdminLayout />
+                  <AdminLayoutComponent />
                 </AdminCheck>
               </SignedIn>
             }
@@ -155,43 +157,6 @@ const AdminCheck = ({ children }: { children: React.ReactNode }) => {
   }
 
   return <>{children}</>;
-};
-
-// Add AdminLayout component
-const AdminLayout = () => {
-  const navigate = useNavigate();
-  
-  return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex">
-              <div className="flex-shrink-0 flex items-center">
-                <h1 className="text-xl font-bold text-amber-900">Admin Panel</h1>
-              </div>
-            </div>
-            <div className="flex items-center">
-              <button
-                onClick={() => navigate('/')}
-                className="text-amber-600 hover:text-amber-900"
-              >
-                Back to Website
-              </button>
-              <UserButton afterSignOutUrl="/" />
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <Routes>
-          <Route path="orders" element={<AdminOrders />} />
-          <Route path="/" element={<Navigate to="orders" replace />} />
-        </Routes>
-      </div>
-    </div>
-  );
 };
 
 export default App;
