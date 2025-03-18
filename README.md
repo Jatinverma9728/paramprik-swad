@@ -4,9 +4,7 @@
   <a href="hh" target="_blank">
     <img alt="License: h1" src="https://img.shields.io/badge/License-h1-yellow.svg" />
   </a>
-  <a href="https://twitter.com/htt" target="_blank">
-    <img alt="Twitter: htt" src="https://img.shields.io/twitter/follow/htt.svg?style=social" />
-  </a>
+ 
 </p>
 
 > Paramprik Swad - A Taste of Tradition
@@ -50,10 +48,9 @@ npm install and then npm run dev
 
 👤 **Jatin verma**
 
-* Website: htt
-* Twitter: [@htt](https://twitter.com/htt)
-* Github: [@htt](https://github.com/htt)
-* LinkedIn: [@htt](https://linkedin.com/in/htt)
+* Website: https://vrma-portfolio.vercel.app/
+* Github: https://github.com/Jatinverma9728
+* LinkedIn:https://www.linkedin.com/in/jatinverma9728/
 
 ## Show your support
 
@@ -61,5 +58,5 @@ Give a ⭐️ if this project helped you!
 
 ## 📝 License
 
-Copyright © 2025 [Jatin verma](https://github.com/htt).<br />
-This project is [h1](hh) licensed.
+Copyright © 2025 [Jatin verma](https://github.com/Jatinverma9728).<br />
+This project is [h1](MIT) licensed.
