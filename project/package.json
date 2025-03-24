@@ -23,6 +23,7 @@
     "axios": "^1.7.9",
     "canvas-confetti": "^1.9.3",
     "clerk": "^0.6.1",
+    "firebase": "^11.5.0",
     "framer-motion": "^11.18.2",
     "gsap": "^3.12.7",
     "lucide-react": "^0.344.0",

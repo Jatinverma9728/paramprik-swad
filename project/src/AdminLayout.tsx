@@ -3,6 +3,7 @@ import { Link, Routes, Route } from 'react-router-dom';
 import { Home, ShoppingCart, Users, Settings, Package, ListChecks } from 'lucide-react';
 import { AdminOrders } from './pages/AdminOrders';
 import { AdminDashboard } from './pages/AdminDashboard';
+import { AdminProducts } from './pages/AdminProducts';
 
 const AdminLayout = () => {
   return (
@@ -27,6 +28,12 @@ const AdminLayout = () => {
                 <span>Orders</span>
               </Link>
             </li>
+            <li>
+              <Link to="/admin/products" className="flex items-center space-x-3 py-2 px-4 rounded-md hover:bg-amber-700 transition-colors">
+                <Package className="w-5 h-5" />
+                <span>Products</span>
+              </Link>
+            </li>
             {/* Add more links as needed */}
           </ul>
         </nav>
@@ -42,6 +49,7 @@ const AdminLayout = () => {
           <Routes>
             <Route path="/" element={<AdminDashboard />} />
             <Route path="orders" element={<AdminOrders />} />
+            <Route path="products" element={<AdminProducts />} />
           </Routes>
         </div>
       </div>
