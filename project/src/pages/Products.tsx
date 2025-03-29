@@ -6,7 +6,6 @@ import { useSearchParams } from "react-router-dom";
 import { ScrollToTopButton } from "../components/ScrollToTopButton";
 import { Toast } from "../components/Toast";
 import { AnimatedHeart } from "../components/AnimatedHeart";
-import { getProducts } from '../api/products';
 
 export const PRODUCTS: Product[] = [
   {
@@ -765,23 +764,6 @@ export const Products = () => {
   >(Object.fromEntries(updatedProducts.map((p) => [p.id, p.sizes[0]])));
   const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
   const [imagesLoaded, setImagesLoaded] = useState(false);
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const data = await getProducts();
-        setProducts(data);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, []);
 
   // Update URL when category changes
   useEffect(() => {

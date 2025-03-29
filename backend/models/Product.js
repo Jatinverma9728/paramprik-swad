@@ -1,17 +1,5 @@
 const mongoose = require('mongoose');
 
-const sizeSchema = new mongoose.Schema({
-  size: {
-    type: String,
-    required: true
-  },
-  price: {
-    type: Number,
-    required: true,
-    min: 0
-  }
-});
-
 const productSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -30,7 +18,7 @@ const productSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
-    enum: ['Spices', 'Dairy', 'Pulses', 'Oils', 'Salts', 'Flours', 'Honey', 'Rice', 'Natural Sweetness']
+    enum: ['sweets', 'namkeen', 'snacks']
   },
   imageUrl: {
     type: String,
@@ -45,8 +33,7 @@ const productSchema = new mongoose.Schema({
   isAvailable: {
     type: Boolean,
     default: true
-  },
-  sizes: [sizeSchema]
+  }
 }, {
   timestamps: true
 });
