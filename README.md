@@ -59,4 +59,4 @@ Give a ⭐️ if this project helped you!
 ## 📝 License
 
 Copyright © 2025 [Jatin verma](https://github.com/Jatinverma9728).<br />
-This project is [h1](MIT) licensed.
+This project is (MIT) licensed.
